@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Onyx</string>
+    <string name="no_internet">I can\'t connect to the internet right now.\nMaybe come back later?</string>
+    <string name="no_internet_button">Okay, I\'ll come back later.</string>
+    <string name="slide_1_title">Hello, human!</string>
+    <string name="slide_1_description">I\'m Onyx.\nYour personal, digital assistant.</string>
+    <string name="slide_2_title">I\'m artificially intelligent.</string>
+    <string name="slide_2_description">This means that I get better every time you use me.</string>
+    <string name="slide_3_title">I\'m still under development.</string>
+    <string name="slide_3_description">So it\'s very likely for me to make mistakes.\nDon\'t judge me!</string>
+    <string name="default_greeting">Hello there!</string>
+    <string name="type">Type here...</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="say_something">Say something...</string>
+    <string name="error_error_log">\n\n\nNothing here. Looks like nothing ever went wrong.</string>
+    <string name="title_activity_error_log">Error Log</string>
+    <string name="text_line_break">------------------------------------------------------------------------</string>
+
+    <string name="api_ai_client_access_token">fd0c404d8d874f3294d1eb339f3cddb0</string>
+
+    <string name="action_settings">Settings</string>
+
+</resources>

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBlack"
+    tools:context="com.element.onyx.MainActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:id="@+id/scrollView"
+        android:padding="5dp">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerInParent="true"
+                android:padding="15dp"
+                android:textSize="25sp"
+                android:id="@+id/usertv"
+                android:textColor="@color/colorWhite"
+                android:textAlignment="center"
+                android:text=""/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:padding="15dp"
+                android:textSize="25sp"
+                android:layout_below="@id/usertv"
+                android:id="@+id/onyxtv"
+                android:layout_marginTop="50dp"
+                android:textColor="@color/colorAccent"
+                android:textAlignment="center"
+                android:text=""/>
+
+            <pl.droidsonroids.gif.GifImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:scaleType="fitXY"
+                android:layout_below="@id/onyxtv"
+                android:layout_centerHorizontal="true"
+                android:visibility="gone"
+                android:id="@+id/cover"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_above="@id/cover"
+                android:id="@+id/buttonContainer"
+                android:visibility="gone"
+                android:layout_alignParentBottom="true"
+                android:padding="10dp">
+                
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:text="@string/yes"
+                    android:id="@+id/positiveButton"
+                    android:textColor="@color/colorAccent"
+                    android:background="@color/colorBlack"
+                    android:textAllCaps="true"
+                    android:textAlignment="center"/>
+
+                <View
+                    android:layout_width="10dp"
+                    android:layout_height="wrap_content" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:text="@string/no"
+                    android:id="@+id/negativeButton"
+                    android:textColor="@color/colorAccent"
+                    android:background="@color/colorBlack"
+                    android:textAllCaps="true"
+                    android:textAlignment="center"/>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:alpha="0.3"
+        android:id="@+id/onyxLogo"
+        android:layout_centerInParent="true"
+        android:src="@drawable/onyx"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:fabSize="normal"
+        android:id="@+id/listen"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="15dp"
+        android:src="@drawable/voice"/>
+
+    <com.hanks.htextview.HTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:textSize="25sp"
+        android:id="@+id/voice"
+        android:textColor="@color/colorAccent"
+        android:layout_marginBottom="10dp"
+        android:textAlignment="center"
+        app:animateType="evaporate"
+        app:fontAsset="ubuntu_r.ttf"
+        app:isAnimate="true"
+        android:visibility="visible"
+        android:layout_above="@id/listen"
+        android:layout_centerInParent="true"
+        android:text="@string/say_something"/>
+
+</RelativeLayout>

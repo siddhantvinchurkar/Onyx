@@ -1,0 +1,56 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/slide3frag"
+    android:background="@color/colorBlack"
+    tools:context=".IntroductionActivitySlideFragment3">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textColor="@color/colorWhite"
+        android:padding="10dp"
+        android:textSize="35sp"
+        android:id="@+id/title3"
+        android:text="@string/slide_3_title" />
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"/>
+
+    <pl.droidsonroids.gif.GifImageView
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:scaleType="fitCenter"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/development"/>
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:layout_gravity="bottom|center"
+        android:padding="20dp"
+        android:textColor="@color/colorWhite"
+        android:textSize="20sp"
+        android:id="@+id/desc3"
+        android:text="@string/slide_3_description" />
+
+    </LinearLayout>
+
+</FrameLayout>

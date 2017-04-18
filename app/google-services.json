@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "132706470805",
+    "firebase_url": "https://onyx-794f8.firebaseio.com",
+    "project_id": "onyx-794f8",
+    "storage_bucket": "onyx-794f8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:132706470805:android:22913ebea461ca69",
+        "android_client_info": {
+          "package_name": "com.element.onyx"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "132706470805-ca3geu8ougtbc92gspruav26pjmo1seu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDwdpZxV21NuxoUaIy8e12eRT5GXEfxSOY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

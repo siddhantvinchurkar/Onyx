@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBlack"
+    android:orientation="vertical"
+    tools:context="com.element.onyx.SplashActivity">
+
+    <ImageView
+        android:id="@+id/startup"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="160dp"
+        android:src="@drawable/ic_launcher" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:id="@+id/spacer"
+        android:visibility="visible"/>
+    
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:text="@string/no_internet"
+        android:textColor="@color/colorWhite"
+        android:padding="5dp"
+        android:id="@+id/textView_no_internet"
+        android:visibility="gone"
+        android:textAlignment="center"
+        android:textSize="20sp"/>
+
+    <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"
+        android:layout_gravity="center"
+        android:indeterminate="true"
+        app:spb_sections_count="2"
+        app:spb_colors="@array/google_colors"
+        app:spb_speed="1.5"
+        app:spb_stroke_width="2dp"
+        app:spb_stroke_separator_length="8dp"
+        app:spb_reversed="true"
+        app:spb_mirror_mode="true"
+        app:spb_interpolator="spb_interpolator_acceleratedecelerate"
+        app:spb_progressiveStart_activated="true"
+        app:spb_progressiveStart_speed="2"
+        app:spb_progressiveStop_speed="3.4"
+        />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/no_internet_button"
+            android:textColor="@color/colorAccent"
+            android:background="@android:color/transparent"
+            android:textAllCaps="true"
+            android:layout_alignParentBottom="true"
+            android:textSize="18sp"
+            android:id="@+id/button_no_internet"
+            android:visibility="gone"
+            android:textAlignment="center" />
+
+    </RelativeLayout>
+
+</LinearLayout>
