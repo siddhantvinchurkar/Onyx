@@ -13,12 +13,19 @@ import android.widget.Toast;
 import com.google.common.io.Files;
 import com.scottyab.rootbeer.RootBeer;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.TimeZone;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -225,6 +232,99 @@ public class GlobalClass {
             System.out.println("Unable to delete error log; caused by: " + e.getStackTrace().toString());
 
         }
+
+    }
+
+    /* The following method will parse a locally stored JSON file and return alphabetically sorted
+     * lists of cities based on the country provided */
+
+    public static final ArrayList getCityList(String country, Context context)
+    {
+
+        String DHLServiceList = null;
+        ArrayList arrayList = new ArrayList();
+        try
+        {
+
+            InputStream inputStream = context.getAssets().open("DHLServiceList.json");
+            int size = inputStream.available();
+            byte[] buffer = new byte[size];
+            inputStream.read(buffer);
+            inputStream.close();
+            DHLServiceList = new String(buffer, "UTF-8");
+
+        }
+        catch (IOException e)
+        {
+
+            e.printStackTrace();
+
+        }
+
+        try
+        {
+            // Get JSON array of countries
+
+            JSONObject jsonObject = new JSONObject(DHLServiceList);
+            JSONArray jsonArray = jsonObject.getJSONArray(country);
+
+            // Read and sort array alphabetically
+
+            for(int i=0; i<jsonArray.length(); i++)
+            {
+
+                arrayList.add(jsonArray.getString(i).toString());
+
+            }
+
+            Collections.sort(arrayList, String.CASE_INSENSITIVE_ORDER);
+
+        }
+        catch (JSONException e)
+        {
+
+            e.printStackTrace();
+
+        }
+
+        return arrayList;
+
+    }
+
+    /* The following method will check for the existence of a city in the list using the binary
+     * search algorithm */
+
+    public static final boolean verifyCity(ArrayList arrayList, String city)
+    {
+
+        if(Collections.binarySearch(arrayList, city)<0) return false;
+        else return true;
+
+    }
+
+    /* The following method will extract values from a JSON object */
+
+    public static final String extractFromJSONObject(String obj, String key)
+    {
+
+        String response = " ";
+
+        try
+        {
+
+            JSONObject jsonObject = new JSONObject(obj);
+            response =  jsonObject.getString(key).toString();
+
+        }
+        catch (JSONException e)
+        {
+
+            e.printStackTrace();
+            return " ";
+
+        }
+
+        return response;
 
     }
 

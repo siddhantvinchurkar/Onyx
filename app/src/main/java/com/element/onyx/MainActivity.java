@@ -3,7 +3,6 @@ package com.element.onyx;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Vibrator;
@@ -15,18 +14,15 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.hanks.htextview.HTextView;
 
 import java.util.Locale;
+import java.util.Objects;
 
 import ai.api.AIListener;
-import ai.api.AIServiceException;
-import ai.api.RequestExtras;
 import ai.api.android.AIConfiguration;
 import ai.api.android.AIService;
 import ai.api.model.AIError;
@@ -52,7 +48,10 @@ public class MainActivity extends AppCompatActivity {
     Animation fadeInBackground, fadeOutBackground, fadeInQuick, fadeOutQuick, fadeOutQuick2;
     AIConfiguration config;
     AIService aiService;
-    String onyx_text, user_text;
+    String onyx_text, user_text, originCountry, destinationCountry, originCity, destinationCity,
+            senderFirstName, recipientFirstName, senderLastName, recipientLastName, packageWeight,
+            packageWeightUnit, originStreetAddress, destinationStreetAddress, originZipCode,
+            destinationZipCode, sender, recipient, ORDER_SCOPE;
     Typeface ubuntu_r;
     TextToSpeech tts;
     Handler handler;
@@ -61,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
     // Variable Declarations
 
     int actionCode, USER_TV, ONYX_TV;
-    boolean isListening, textInput;
+    boolean isListening, textInput, DHL_SERVICE_AVAILABLE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
 
         isListening = false;
         textInput = false;
+        DHL_SERVICE_AVAILABLE = true;
 
         // Set font for TextViews 'usertv' and 'onyxtv'
 
@@ -239,6 +239,85 @@ public class MainActivity extends AppCompatActivity {
                             case "errorLog.show": changeText("Opening the error log.", ONYX_TV);
                                                   startActivity(new Intent(MainActivity.this, ErrorLogActivity.class));
                                                   break;
+
+                            // Retrieve customer name
+
+                            case "order.getName": senderFirstName = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "given-name");
+                                                  senderLastName = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "last-name");
+                                                  if(senderFirstName=="") sender = senderLastName;
+                                                  else if(senderLastName=="") sender = senderFirstName;
+                                                  else if(senderFirstName=="" && senderLastName=="") sender = "Friend";
+                                                  else sender = senderFirstName+ " " + senderLastName;
+                                                  break;
+
+                            // Retrieve destination address
+
+                            case "order.getDestinationAddress": destinationCountry = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "geo-country");
+                                                                destinationCity = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "geo-city");
+                                                                destinationStreetAddress = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "address");
+                                                                destinationZipCode = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "zip-code");
+                                                                break;
+
+                            // Retrieve origin address
+
+                            case "order.getOriginAddress": originCountry = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "geo-country");
+                                                           originCity = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "geo-city");
+                                                           originStreetAddress = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "address");
+                                                           originZipCode = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "zip-code");
+
+                                                            // Decide the scope of the order
+
+                                                           if(Objects.equals(originCountry, destinationCountry)) ORDER_SCOPE = "Domestic";
+                                                           else ORDER_SCOPE = "International";
+
+                                                            // Check for service availability in destination city
+
+                                                           if(!GlobalClass.verifyCity(GlobalClass.getCityList(destinationCountry, getApplicationContext()), destinationCity)) DHL_SERVICE_AVAILABLE = false;
+                                                           else if(!GlobalClass.verifyCity(GlobalClass.getCityList(originCountry, getApplicationContext()), originCity)) DHL_SERVICE_AVAILABLE = false;
+                                                           else DHL_SERVICE_AVAILABLE = true;
+
+                                                           break;
+
+                            case "order.getWeight": packageWeight = GlobalClass.extractFromJSONObject(GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "unit-weight"), "amount");
+                                                    packageWeightUnit = GlobalClass.extractFromJSONObject(GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "unit-weight"), "unit");
+                                                    break;
+
+                            case "order.getRecipientName": recipientFirstName = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "given-name");
+                                                           recipientLastName = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "last-name");
+                                                           if(recipientFirstName=="") recipient = recipientLastName;
+                                                           else if(recipientLastName=="") recipient = recipientFirstName;
+                                                           else if(recipientFirstName=="" && recipientLastName=="") recipient = "Friend";
+                                                           else recipient = recipientFirstName+ " " + recipientLastName;
+                                                           break;
+
+                            // Branch on the basis of service availability
+
+                            case "order.putSummary": if(DHL_SERVICE_AVAILABLE)
+                                                        {
+
+                                                            changeText("Okay " + sender + ", You have decided to send a package weighing "
+                                                                    + packageWeight + " " + packageWeightUnit + " to " + recipient + " residing at " + destinationStreetAddress
+                                                                    + ", " + destinationCity + ", " + destinationCountry + " - " + destinationZipCode
+                                                                    + ". This will cost you - - - .", ONYX_TV);
+                                                            speak("Okay " + sender + ", You have decided to send a package weighing "
+                                                                    + packageWeight + " " + packageWeightUnit + " to " + recipient + " residing at " + destinationStreetAddress
+                                                                    + ", " + destinationCity + ", " + destinationCountry + " - " + destinationZipCode
+                                                                    + ". This will cost you - - - .");
+
+                                                        }
+                                                     else
+                                                        {
+
+                                                            changeText("Unfortunately, we are unable to process your order at " +
+                                                                    "this moment. It seems as though we do not serve the origin/" +
+                                                                    "destination address you mentioned earlier.", ONYX_TV);
+                                                            speak("Unfortunately, we are unable to process your order at " +
+                                                                    "this moment. It seems as though we do not serve the origin/" +
+                                                                    "destination address you mentioned earlier.");
+
+                                                        }
+                                                     break;
+
                             default: GlobalClass.logError("Undefined Action: " + result.getResult().getAction().toString() + "\nQuery: " + result.getResult().getResolvedQuery().toString(), getApplicationContext());
                                      break;
 
