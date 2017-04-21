@@ -17,8 +17,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.hanks.htextview.HTextView;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -51,16 +58,22 @@ public class MainActivity extends AppCompatActivity {
     String onyx_text, user_text, originCountry, destinationCountry, originCity, destinationCity,
             senderFirstName, recipientFirstName, senderLastName, recipientLastName, packageWeight,
             packageWeightUnit, originStreetAddress, destinationStreetAddress, originZipCode,
-            destinationZipCode, sender, recipient, ORDER_SCOPE;
+            destinationZipCode, sender, recipient, ORDER_SCOPE, senderPhoneNumber, recipientPhoneNumber,
+            trackerId, senderAddress, recipientAddress, packageDescription, packageType, packageStatus;
     Typeface ubuntu_r;
     TextToSpeech tts;
     Handler handler;
     Vibrator vibrator;
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference databaseReference;
+    ArrayList trackerIdList, userList;
 
     // Variable Declarations
 
     int actionCode, USER_TV, ONYX_TV;
     boolean isListening, textInput, DHL_SERVICE_AVAILABLE;
+    char trackerIdIndex;
+    double shippingPrice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +115,15 @@ public class MainActivity extends AppCompatActivity {
 
         vibrator = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
 
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference();
+
+        trackerIdList = new ArrayList();
+        userList = new ArrayList();
+
+        senderPhoneNumber = "9900608821";
+        trackerId = "jjaagaiicba";
+
         // Variable Initialization
 
         actionCode = 0;
@@ -114,6 +136,10 @@ public class MainActivity extends AppCompatActivity {
         isListening = false;
         textInput = false;
         DHL_SERVICE_AVAILABLE = true;
+
+        trackerIdIndex = 'a';
+
+        shippingPrice = 0.0;
 
         // Set font for TextViews 'usertv' and 'onyxtv'
 
@@ -204,6 +230,59 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Fetch data from Firebase
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                sender = dataSnapshot.child("Users").child(senderPhoneNumber).child(trackerId).child("from").child("name").getValue().toString();
+                recipient = dataSnapshot.child("Users").child(senderPhoneNumber).child(trackerId).child("to").child("name").getValue().toString();
+                senderAddress = dataSnapshot.child("Users").child(senderPhoneNumber).child(trackerId).child("from").child("address").getValue().toString();
+                recipientAddress = dataSnapshot.child("Users").child(senderPhoneNumber).child(trackerId).child("to").child("address").getValue().toString();
+                recipientPhoneNumber = dataSnapshot.child("Users").child(senderPhoneNumber).child(trackerId).child("to").child("contact").getValue().toString();
+                packageWeight = dataSnapshot.child("Users").child(senderPhoneNumber).child(trackerId).child("weight").getValue().toString();
+                packageWeightUnit = dataSnapshot.child("Users").child(senderPhoneNumber).child(trackerId).child("weightUnit").getValue().toString();
+                packageDescription = dataSnapshot.child("Users").child(senderPhoneNumber).child(trackerId).child("description").getValue().toString();
+                packageType = dataSnapshot.child("Users").child(senderPhoneNumber).child(trackerId).child("parcelType").getValue().toString();
+                ORDER_SCOPE = dataSnapshot.child("Users").child(senderPhoneNumber).child(trackerId).child("serviceMetrics").getValue().toString();
+                packageStatus = dataSnapshot.child("Users").child(senderPhoneNumber).child(trackerId).child("status").getValue().toString();
+
+                // Retrieve user list
+
+                int j = 0;
+                for(DataSnapshot snapshot : dataSnapshot.getChildren())
+                {
+
+                    userList.add(j, snapshot.child("Users").getChildren().toString());
+                    j++;
+
+                }
+                Collections.sort(userList, String.CASE_INSENSITIVE_ORDER);
+
+                // Retrieve tracker ID list
+
+                int k = 0;
+                for(DataSnapshot snapshot : dataSnapshot.getChildren())
+                {
+
+                    trackerIdList.add(k, snapshot.child("Users").child(senderPhoneNumber).getChildren().toString());
+                    trackerIdIndex++;
+                    k++;
+
+                }
+                Collections.sort(trackerIdList, String.CASE_INSENSITIVE_ORDER);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        updateFirebaseDependants();
+
         // AI Listener
 
         aiService.setListener(new AIListener() {
@@ -242,13 +321,18 @@ public class MainActivity extends AppCompatActivity {
 
                             // Retrieve customer name
 
-                            case "order.getName": senderFirstName = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "given-name");
+                            case "order.getSenderName": senderFirstName = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "given-name");
                                                   senderLastName = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "last-name");
                                                   if(senderFirstName=="") sender = senderLastName;
                                                   else if(senderLastName=="") sender = senderFirstName;
                                                   else if(senderFirstName=="" && senderLastName=="") sender = "Friend";
                                                   else sender = senderFirstName+ " " + senderLastName;
                                                   break;
+
+                            // Retrieve customer phone number
+
+                            case "order.getSenderNumber": senderPhoneNumber = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "number");
+                                                          break;
 
                             // Retrieve destination address
 
@@ -258,12 +342,70 @@ public class MainActivity extends AppCompatActivity {
                                                                 destinationZipCode = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "zip-code");
                                                                 break;
 
-                            // Retrieve origin address
+                            // Retrieve origin street address
 
-                            case "order.getOriginAddress": originCountry = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "geo-country");
-                                                           originCity = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "geo-city");
-                                                           originStreetAddress = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "address");
-                                                           originZipCode = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "zip-code");
+                            case "order.getOriginStreet": originStreetAddress = result.getResult().getResolvedQuery().toString();
+                                                          break;
+
+                            // Retrieve origin city
+
+                            case "order.getOriginCity": originCity = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "geo-city");
+                                                        break;
+
+                            // Retrieve origin country
+
+                            case "order.getOriginCountry": originCountry = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "geo-country");
+                                                           break;
+
+                            // Retrieve origin zip code
+
+                            case "order.getOriginZip": originZipCode = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "phone-number");
+                                                       break;
+
+                            // Retrieve package description
+
+                            case "order.getDescription": packageDescription = result.getResult().getResolvedQuery().toString();
+                                                         break;
+
+                            // Retrieve package weight
+
+                            case "order.getWeight": packageWeight = GlobalClass.extractFromJSONObject(GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "unit-weight"), "amount");
+                                                    packageWeightUnit = GlobalClass.extractFromJSONObject(GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "unit-weight"), "unit");
+                                                    break;
+
+                            // Retrieve recipient name
+
+                            case "order.getRecipientName": recipientFirstName = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "given-name");
+                                recipientLastName = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "last-name");
+                                if(recipientFirstName=="") recipient = recipientLastName;
+                                else if(recipientLastName=="") recipient = recipientFirstName;
+                                else if(recipientFirstName=="" && recipientLastName=="") recipient = "Friend";
+                                else recipient = recipientFirstName+ " " + recipientLastName;
+                                break;
+
+                            // Retrieve recipient phone number
+
+                            case "order.getRecipientNumber": recipientPhoneNumber = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "phone-number");
+                                                             break;
+
+                            // Retrieve destination street address
+
+                            case "order.getDestinationStreet": result.getResult().getResolvedQuery().toString();
+                                                               break;
+
+                            // Retrieve destination city
+
+                            case "order.getDestinationCity": destinationCity = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "geo-city");
+                                                             break;
+
+                            // Retrieve destination country
+
+                            case "order.getDestinationCountry": destinationCountry = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "geo-country");
+                                                                    break;
+
+                            // Retrieve origin zip code
+
+                            case "order.getDestinationZip": destinationZipCode = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "number");
 
                                                             // Decide the scope of the order
 
@@ -276,33 +418,46 @@ public class MainActivity extends AppCompatActivity {
                                                            else if(!GlobalClass.verifyCity(GlobalClass.getCityList(originCountry, getApplicationContext()), originCity)) DHL_SERVICE_AVAILABLE = false;
                                                            else DHL_SERVICE_AVAILABLE = true;
 
-                                                           break;
+                                                            // Calculate package type
 
-                            case "order.getWeight": packageWeight = GlobalClass.extractFromJSONObject(GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "unit-weight"), "amount");
-                                                    packageWeightUnit = GlobalClass.extractFromJSONObject(GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "unit-weight"), "unit");
-                                                    break;
+                                                            packageType = GlobalClass.determinePackageType(packageWeight);
 
-                            case "order.getRecipientName": recipientFirstName = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "given-name");
-                                                           recipientLastName = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "last-name");
-                                                           if(recipientFirstName=="") recipient = recipientLastName;
-                                                           else if(recipientLastName=="") recipient = recipientFirstName;
-                                                           else if(recipientFirstName=="" && recipientLastName=="") recipient = "Friend";
-                                                           else recipient = recipientFirstName+ " " + recipientLastName;
-                                                           break;
+                                                            // Calculate shipping price
 
-                            // Branch on the basis of service availability
+                                                            shippingPrice = GlobalClass.calculateShippingPrice(Double.parseDouble(packageWeight));
 
-                            case "order.putSummary": if(DHL_SERVICE_AVAILABLE)
-                                                        {
+                                                            // Update Firebase database variables
 
-                                                            changeText("Okay " + sender + ", You have decided to send a package weighing "
-                                                                    + packageWeight + " " + packageWeightUnit + " to " + recipient + " residing at " + destinationStreetAddress
-                                                                    + ", " + destinationCity + ", " + destinationCountry + " - " + destinationZipCode
-                                                                    + ". This will cost you - - - .", ONYX_TV);
-                                                            speak("Okay " + sender + ", You have decided to send a package weighing "
-                                                                    + packageWeight + " " + packageWeightUnit + " to " + recipient + " residing at " + destinationStreetAddress
-                                                                    + ", " + destinationCity + ", " + destinationCountry + " - " + destinationZipCode
-                                                                    + ". This will cost you - - - .");
+                                                            senderAddress = originStreetAddress + " " + originCity + " " + originCountry + " " + originZipCode;
+                                                            recipientAddress = destinationStreetAddress + " " + destinationCity + " " + destinationCountry + " " + destinationZipCode;
+                                                            trackerId = GlobalClass.computeTrackerIdFromPhoneNumber(senderPhoneNumber, trackerIdIndex);
+
+                                                            // Update Firebase Database
+
+                                                            databaseReference.child("Users").child(senderPhoneNumber).child(trackerId).child("from").child("name").setValue(sender);
+                                                            databaseReference.child("Users").child(senderPhoneNumber).child(trackerId).child("to").child("name").setValue(recipient);
+                                                            databaseReference.child("Users").child(senderPhoneNumber).child(trackerId).child("from").child("contact").setValue(senderPhoneNumber);
+                                                            databaseReference.child("Users").child(senderPhoneNumber).child(trackerId).child("to").child("contact").setValue(recipientPhoneNumber);
+                                                            databaseReference.child("Users").child(senderPhoneNumber).child(trackerId).child("from").child("address").setValue(senderAddress);
+                                                            databaseReference.child("Users").child(senderPhoneNumber).child(trackerId).child("to").child("address").setValue(recipientAddress);
+                                                            databaseReference.child("Users").child(senderPhoneNumber).child(trackerId).child("description").setValue(packageDescription);
+                                                            databaseReference.child("Users").child(senderPhoneNumber).child(trackerId).child("parcelType").setValue(packageType);
+                                                            databaseReference.child("Users").child(senderPhoneNumber).child(trackerId).child("serviceMetrics").setValue(ORDER_SCOPE);
+                                                            databaseReference.child("Users").child(senderPhoneNumber).child(trackerId).child("status").setValue(packageStatus);
+
+                                                            // Branch on the basis of service availability
+
+                                                            if(DHL_SERVICE_AVAILABLE)
+                                                                {
+
+                                                                    changeText("Okay " + sender + ", You have decided to send a package weighing "
+                                                                            + packageWeight + " " + packageWeightUnit + " to " + recipient + " residing at " + destinationStreetAddress
+                                                                            + " " + destinationCity + " " + destinationCountry + " - " + destinationZipCode
+                                                                            + ". This will cost you $ " + shippingPrice + ".", ONYX_TV);
+                                                                    speak("Okay " + sender + " You have decided to send a package weighing "
+                                                                            + packageWeight + " " + packageWeightUnit + " to " + recipient + " residing at " + destinationStreetAddress
+                                                                            + " " + destinationCity + " " + destinationCountry + " - " + destinationZipCode
+                                                                            + " This will cost you $ " + shippingPrice + ".");
 
                                                         }
                                                      else
@@ -550,6 +705,15 @@ public class MainActivity extends AppCompatActivity {
 
         tts.speak(speechText, TextToSpeech.QUEUE_FLUSH, null);
         return;
+
+    }
+
+    // The following method will update all Firebase dependant variables in this class
+
+    private void updateFirebaseDependants()
+    {
+
+        databaseReference.child("Updater").setValue(GlobalClass.randomInteger(1000, 9999));
 
     }
 

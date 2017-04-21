@@ -26,6 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Random;
 import java.util.TimeZone;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -325,6 +326,75 @@ public class GlobalClass {
         }
 
         return response;
+
+    }
+
+    // The following method will return a random integer in the specified range
+
+    public static final int randomInteger(int min, int max)
+    {
+
+        Random random = new Random();
+        return random.nextInt((max - min) + 1) + min;
+
+    }
+
+    public static final String computeTrackerIdFromPhoneNumber(String phoneNumber, char trackerIdIndex)
+    {
+
+        for(int i=0; i<phoneNumber.length(); i++)
+        {
+
+            switch (phoneNumber.charAt(i))
+            {
+
+                case 0: phoneNumber.replace(phoneNumber.charAt(i), 'a'); break;
+                case 1: phoneNumber.replace(phoneNumber.charAt(i), 'b'); break;
+                case 2: phoneNumber.replace(phoneNumber.charAt(i), 'c'); break;
+                case 3: phoneNumber.replace(phoneNumber.charAt(i), 'd'); break;
+                case 4: phoneNumber.replace(phoneNumber.charAt(i), 'e'); break;
+                case 5: phoneNumber.replace(phoneNumber.charAt(i), 'f'); break;
+                case 6: phoneNumber.replace(phoneNumber.charAt(i), 'g'); break;
+                case 7: phoneNumber.replace(phoneNumber.charAt(i), 'h'); break;
+                case 8: phoneNumber.replace(phoneNumber.charAt(i), 'i'); break;
+                case 9: phoneNumber.replace(phoneNumber.charAt(i), 'j'); break;
+                default: phoneNumber.replace(phoneNumber.charAt(i), 'k'); break;
+
+            }
+
+        }
+
+        phoneNumber += trackerIdIndex;
+        return phoneNumber;
+
+    }
+
+    // The following method will calculate the shipping price of the package based on it's weight
+
+    public static final double calculateShippingPrice(double weight)
+    {
+
+        return 6*weight;
+
+    }
+
+    // The following method will determine the type of package based on it's weight
+
+    public static final String determinePackageType(String weight)
+    {
+
+        String packageType;
+        if(Integer.parseInt(weight)<0.5) packageType =  "Envelope";
+        if(Integer.parseInt(weight)<1) packageType = "Box 2";
+        if(Integer.parseInt(weight)<2) packageType = "Box 3";
+        if(Integer.parseInt(weight)<5) packageType = "Box 4";
+        if(Integer.parseInt(weight)<10) packageType = "Box 5";
+        if(Integer.parseInt(weight)<15) packageType = "Box 6";
+        if(Integer.parseInt(weight)<20) packageType = "Box 7";
+        if(Integer.parseInt(weight)<25) packageType = "Box 8";
+        else packageType = "Custom";
+
+        return packageType;
 
     }
 
