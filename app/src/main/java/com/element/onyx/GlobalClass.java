@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.Uri;
-import android.widget.Toast;
 
 import com.google.common.io.Files;
 import com.scottyab.rootbeer.RootBeer;
@@ -183,7 +182,7 @@ public class GlobalClass {
 
             }
 
-            Toast.makeText(context, "Error logged", Toast.LENGTH_SHORT).show();
+            System.out.println("Error logged!");
 
         }
         catch (IOException e)
@@ -339,8 +338,13 @@ public class GlobalClass {
 
     }
 
+    /* The following method will calculate the tracker ID from the provided phone number */
+
     public static final String computeTrackerIdFromPhoneNumber(String phoneNumber, char trackerIdIndex)
     {
+
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.setLength(0);
 
         for(int i=0; i<phoneNumber.length(); i++)
         {
@@ -348,24 +352,58 @@ public class GlobalClass {
             switch (phoneNumber.charAt(i))
             {
 
-                case 0: phoneNumber.replace(phoneNumber.charAt(i), 'a'); break;
-                case 1: phoneNumber.replace(phoneNumber.charAt(i), 'b'); break;
-                case 2: phoneNumber.replace(phoneNumber.charAt(i), 'c'); break;
-                case 3: phoneNumber.replace(phoneNumber.charAt(i), 'd'); break;
-                case 4: phoneNumber.replace(phoneNumber.charAt(i), 'e'); break;
-                case 5: phoneNumber.replace(phoneNumber.charAt(i), 'f'); break;
-                case 6: phoneNumber.replace(phoneNumber.charAt(i), 'g'); break;
-                case 7: phoneNumber.replace(phoneNumber.charAt(i), 'h'); break;
-                case 8: phoneNumber.replace(phoneNumber.charAt(i), 'i'); break;
-                case 9: phoneNumber.replace(phoneNumber.charAt(i), 'j'); break;
-                default: phoneNumber.replace(phoneNumber.charAt(i), 'k'); break;
+                case '0': stringBuilder.append('a'); break;
+                case '1': stringBuilder.append('b'); break;
+                case '2': stringBuilder.append('c'); break;
+                case '3': stringBuilder.append('d'); break;
+                case '4': stringBuilder.append('e'); break;
+                case '5': stringBuilder.append('f'); break;
+                case '6': stringBuilder.append('g'); break;
+                case '7': stringBuilder.append('h'); break;
+                case '8': stringBuilder.append('i'); break;
+                case '9': stringBuilder.append('j'); break;
+                default: stringBuilder.append('k'); break;
 
             }
 
         }
 
-        phoneNumber += trackerIdIndex;
-        return phoneNumber;
+        stringBuilder.append(trackerIdIndex);
+        return stringBuilder.toString();
+
+    }
+
+    /* The following method will calculate the phone number from the provided tracker ID */
+
+    public static final String computePhoneNumberFromTrackerId(String trackerId)
+    {
+
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.setLength(0);
+
+        for(int i=0; i<trackerId.length(); i++)
+        {
+
+            switch (trackerId.charAt(i))
+            {
+
+                case 'a': stringBuilder.append('0'); break;
+                case 'b': stringBuilder.append('1'); break;
+                case 'c': stringBuilder.append('2'); break;
+                case 'd': stringBuilder.append('3'); break;
+                case 'e': stringBuilder.append('4'); break;
+                case 'f': stringBuilder.append('5'); break;
+                case 'g': stringBuilder.append('6'); break;
+                case 'h': stringBuilder.append('7'); break;
+                case 'i': stringBuilder.append('8'); break;
+                case 'j': stringBuilder.append('9'); break;
+                default: stringBuilder.append('-'); break;
+
+            }
+
+        }
+
+        return stringBuilder.toString();
 
     }
 
@@ -384,14 +422,14 @@ public class GlobalClass {
     {
 
         String packageType;
-        if(Integer.parseInt(weight)<0.5) packageType =  "Envelope";
-        if(Integer.parseInt(weight)<1) packageType = "Box 2";
-        if(Integer.parseInt(weight)<2) packageType = "Box 3";
-        if(Integer.parseInt(weight)<5) packageType = "Box 4";
-        if(Integer.parseInt(weight)<10) packageType = "Box 5";
-        if(Integer.parseInt(weight)<15) packageType = "Box 6";
+        if(Integer.parseInt(weight)<25) packageType =  "Box 8";
         if(Integer.parseInt(weight)<20) packageType = "Box 7";
-        if(Integer.parseInt(weight)<25) packageType = "Box 8";
+        if(Integer.parseInt(weight)<15) packageType = "Box 6";
+        if(Integer.parseInt(weight)<10) packageType = "Box 5";
+        if(Integer.parseInt(weight)<5) packageType = "Box 4";
+        if(Integer.parseInt(weight)<2) packageType = "Box 3";
+        if(Integer.parseInt(weight)<1) packageType = "Box 2";
+        if(Integer.parseInt(weight)<0.5) packageType = "Envelope";
         else packageType = "Custom";
 
         return packageType;

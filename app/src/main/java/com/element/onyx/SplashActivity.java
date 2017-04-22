@@ -290,7 +290,7 @@ public class SplashActivity extends AppCompatActivity {
 
         /* The following code will enable immersive mode for the splash screen
          * for devices running on Android 3.0 Honeycomb or higher. This will effectively
-         * enable immersive mode all of the app's instances as the app is only compatible
+         * enable immersive mode for all of the app's instances as the app is only compatible
          * with devices running on Android 6.0 Marshmallow or higher */
 
         if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.HONEYCOMB) {

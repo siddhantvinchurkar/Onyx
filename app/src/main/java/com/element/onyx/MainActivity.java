@@ -1,5 +1,6 @@
 package com.element.onyx;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -10,12 +11,15 @@ import android.speech.tts.TextToSpeech;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -236,41 +240,61 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                sender = dataSnapshot.child("Users").child(senderPhoneNumber).child(trackerId).child("from").child("name").getValue().toString();
-                recipient = dataSnapshot.child("Users").child(senderPhoneNumber).child(trackerId).child("to").child("name").getValue().toString();
-                senderAddress = dataSnapshot.child("Users").child(senderPhoneNumber).child(trackerId).child("from").child("address").getValue().toString();
-                recipientAddress = dataSnapshot.child("Users").child(senderPhoneNumber).child(trackerId).child("to").child("address").getValue().toString();
-                recipientPhoneNumber = dataSnapshot.child("Users").child(senderPhoneNumber).child(trackerId).child("to").child("contact").getValue().toString();
-                packageWeight = dataSnapshot.child("Users").child(senderPhoneNumber).child(trackerId).child("weight").getValue().toString();
-                packageWeightUnit = dataSnapshot.child("Users").child(senderPhoneNumber).child(trackerId).child("weightUnit").getValue().toString();
-                packageDescription = dataSnapshot.child("Users").child(senderPhoneNumber).child(trackerId).child("description").getValue().toString();
-                packageType = dataSnapshot.child("Users").child(senderPhoneNumber).child(trackerId).child("parcelType").getValue().toString();
-                ORDER_SCOPE = dataSnapshot.child("Users").child(senderPhoneNumber).child(trackerId).child("serviceMetrics").getValue().toString();
-                packageStatus = dataSnapshot.child("Users").child(senderPhoneNumber).child(trackerId).child("status").getValue().toString();
+                try
+                {
+
+                    sender = dataSnapshot.child("Users").child(senderPhoneNumber).child(trackerId).child("from").child("name").getValue().toString();
+                    recipient = dataSnapshot.child("Users").child(senderPhoneNumber).child(trackerId).child("to").child("name").getValue().toString();
+                    senderAddress = dataSnapshot.child("Users").child(senderPhoneNumber).child(trackerId).child("from").child("address").getValue().toString();
+                    recipientAddress = dataSnapshot.child("Users").child(senderPhoneNumber).child(trackerId).child("to").child("address").getValue().toString();
+                    recipientPhoneNumber = String.valueOf(dataSnapshot.child("Users").child(senderPhoneNumber).child(trackerId).child("to").child("contact").getValue()).toString();
+                    packageWeight = String.valueOf(dataSnapshot.child("Users").child(senderPhoneNumber).child(trackerId).child("weight").getValue()).toString();
+                    packageWeightUnit = dataSnapshot.child("Users").child(senderPhoneNumber).child(trackerId).child("weightUnit").getValue().toString();
+                    packageDescription = dataSnapshot.child("Users").child(senderPhoneNumber).child(trackerId).child("description").getValue().toString();
+                    packageType = dataSnapshot.child("Users").child(senderPhoneNumber).child(trackerId).child("parcelType").getValue().toString();
+                    ORDER_SCOPE = dataSnapshot.child("Users").child(senderPhoneNumber).child(trackerId).child("serviceMetrics").getValue().toString();
+                    packageStatus = dataSnapshot.child("Users").child(senderPhoneNumber).child(trackerId).child("status").getValue().toString();
+                }
+                catch (Exception e)
+                {
+
+                    e.printStackTrace();
+                    GlobalClass.logError(e.toString(), getApplicationContext());
+
+                }
 
                 // Retrieve user list
 
                 int j = 0;
-                for(DataSnapshot snapshot : dataSnapshot.getChildren())
+                for(DataSnapshot snapshot : dataSnapshot.child("Users").getChildren())
                 {
 
-                    userList.add(j, snapshot.child("Users").getChildren().toString());
+                    userList.add(j, String.valueOf(snapshot.getKey()));
                     j++;
 
                 }
+
+                // Sort the user list alphabetically
+
                 Collections.sort(userList, String.CASE_INSENSITIVE_ORDER);
 
                 // Retrieve tracker ID list
 
                 int k = 0;
-                for(DataSnapshot snapshot : dataSnapshot.getChildren())
+                for(DataSnapshot snapshot : dataSnapshot.child("Users").child(senderPhoneNumber).getChildren())
                 {
 
-                    trackerIdList.add(k, snapshot.child("Users").child(senderPhoneNumber).getChildren().toString());
-                    trackerIdIndex++;
+                    trackerIdList.add(k, String.valueOf(snapshot.getKey()));
                     k++;
 
                 }
+
+                // Calculate trackerIDIndex
+
+                trackerIdIndex += trackerIdList.size()+1;
+
+                // Sort the tracker ID list alphabetically
+
                 Collections.sort(trackerIdList, String.CASE_INSENSITIVE_ORDER);
 
             }
@@ -280,6 +304,8 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        // Update Firebase dependant variables
 
         updateFirebaseDependants();
 
@@ -319,6 +345,26 @@ public class MainActivity extends AppCompatActivity {
                                                   startActivity(new Intent(MainActivity.this, ErrorLogActivity.class));
                                                   break;
 
+                            // Check if the customer has placed an order earlier
+
+                            case "order.getExistingSenderNumber": senderPhoneNumber = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "phone-number");
+                                                                if (Collections.binarySearch(userList, senderPhoneNumber) < 0) {
+
+                                                                    resetAllApiAiContexts();
+
+                                                                    // Notify user
+
+                                                                    changeText("I'm sorry, but it seems as though you are not a registered user.", ONYX_TV);
+                                                                    speak("I'm sorry, but it seems as though you are not a registered user.");
+
+                                                                } else {
+
+                                                                    // Update Firebase dependants
+
+                                                                    updateFirebaseDependants();
+
+                                                                }
+
                             // Retrieve customer name
 
                             case "order.getSenderName": senderFirstName = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "given-name");
@@ -331,16 +377,8 @@ public class MainActivity extends AppCompatActivity {
 
                             // Retrieve customer phone number
 
-                            case "order.getSenderNumber": senderPhoneNumber = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "number");
+                            case "order.getSenderNumber": senderPhoneNumber = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "phone-number");
                                                           break;
-
-                            // Retrieve destination address
-
-                            case "order.getDestinationAddress": destinationCountry = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "geo-country");
-                                                                destinationCity = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "geo-city");
-                                                                destinationStreetAddress = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "address");
-                                                                destinationZipCode = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "zip-code");
-                                                                break;
 
                             // Retrieve origin street address
 
@@ -359,7 +397,7 @@ public class MainActivity extends AppCompatActivity {
 
                             // Retrieve origin zip code
 
-                            case "order.getOriginZip": originZipCode = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "phone-number");
+                            case "order.getOriginZip": originZipCode = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "number");
                                                        break;
 
                             // Retrieve package description
@@ -390,7 +428,7 @@ public class MainActivity extends AppCompatActivity {
 
                             // Retrieve destination street address
 
-                            case "order.getDestinationStreet": result.getResult().getResolvedQuery().toString();
+                            case "order.getDestinationStreet": destinationStreetAddress = result.getResult().getResolvedQuery().toString();
                                                                break;
 
                             // Retrieve destination city
@@ -403,7 +441,7 @@ public class MainActivity extends AppCompatActivity {
                             case "order.getDestinationCountry": destinationCountry = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "geo-country");
                                                                     break;
 
-                            // Retrieve origin zip code
+                            // Retrieve destination zip code
 
                             case "order.getDestinationZip": destinationZipCode = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "number");
 
@@ -434,16 +472,7 @@ public class MainActivity extends AppCompatActivity {
 
                                                             // Update Firebase Database
 
-                                                            databaseReference.child("Users").child(senderPhoneNumber).child(trackerId).child("from").child("name").setValue(sender);
-                                                            databaseReference.child("Users").child(senderPhoneNumber).child(trackerId).child("to").child("name").setValue(recipient);
-                                                            databaseReference.child("Users").child(senderPhoneNumber).child(trackerId).child("from").child("contact").setValue(senderPhoneNumber);
-                                                            databaseReference.child("Users").child(senderPhoneNumber).child(trackerId).child("to").child("contact").setValue(recipientPhoneNumber);
-                                                            databaseReference.child("Users").child(senderPhoneNumber).child(trackerId).child("from").child("address").setValue(senderAddress);
-                                                            databaseReference.child("Users").child(senderPhoneNumber).child(trackerId).child("to").child("address").setValue(recipientAddress);
-                                                            databaseReference.child("Users").child(senderPhoneNumber).child(trackerId).child("description").setValue(packageDescription);
-                                                            databaseReference.child("Users").child(senderPhoneNumber).child(trackerId).child("parcelType").setValue(packageType);
-                                                            databaseReference.child("Users").child(senderPhoneNumber).child(trackerId).child("serviceMetrics").setValue(ORDER_SCOPE);
-                                                            databaseReference.child("Users").child(senderPhoneNumber).child(trackerId).child("status").setValue(packageStatus);
+                                                            updateFirebaseDatabase();
 
                                                             // Branch on the basis of service availability
 
@@ -453,11 +482,23 @@ public class MainActivity extends AppCompatActivity {
                                                                     changeText("Okay " + sender + ", You have decided to send a package weighing "
                                                                             + packageWeight + " " + packageWeightUnit + " to " + recipient + " residing at " + destinationStreetAddress
                                                                             + " " + destinationCity + " " + destinationCountry + " - " + destinationZipCode
-                                                                            + ". This will cost you $ " + shippingPrice + ".", ONYX_TV);
+                                                                            + ". This will cost you $ " + shippingPrice + ".\n\nIs this information correct?", ONYX_TV);
                                                                     speak("Okay " + sender + " You have decided to send a package weighing "
                                                                             + packageWeight + " " + packageWeightUnit + " to " + recipient + " residing at " + destinationStreetAddress
                                                                             + " " + destinationCity + " " + destinationCountry + " - " + destinationZipCode
                                                                             + " This will cost you $ " + shippingPrice + ".");
+
+                                                                    // Verify order details
+
+                                                                    listen.setVisibility(View.GONE);
+                                                                    positiveButton.setVisibility(View.VISIBLE);
+                                                                    positiveButton.setText("YES");
+                                                                    negativeButton.setVisibility(View.VISIBLE);
+                                                                    negativeButton.setText("NO");
+
+                                                                    // Set actionCode value to identify button actions
+
+                                                                    actionCode = 100;
 
                                                         }
                                                      else
@@ -472,6 +513,69 @@ public class MainActivity extends AppCompatActivity {
 
                                                         }
                                                      break;
+
+                            case "status.getTrackerId": AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+                                                        builder.setCancelable(false);
+                                                        LayoutInflater layoutInflater = getLayoutInflater();
+                                                        View view = layoutInflater.inflate(R.layout.text_input, null);
+                                                        builder.setView(view);
+                                                        final EditText trackerIdTextView = (EditText) view.findViewById(R.id.textInput);
+                                                        trackerIdTextView.setHint("Enter tracker ID here");
+                                                        Button trackerIdDoneButton = (Button) view.findViewById(R.id.textInputDoneButton);
+                                                        Button trackerIdCancelButton = (Button) view.findViewById(R.id.textInputCancelButton);
+                                                        trackerIdDoneButton.setOnClickListener(new View.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(View v) {
+
+                                                                if(!trackerIdTextView.getText().toString().isEmpty())
+                                                                {
+
+                                                                    trackerId = trackerIdTextView.getText().toString();
+                                                                    if(Collections.binarySearch(trackerIdList, trackerId)>=0)
+                                                                    {
+
+                                                                        senderPhoneNumber = GlobalClass.computePhoneNumberFromTrackerId(trackerId.substring(0, trackerId.length()-1));
+                                                                        updateFirebaseDependants();
+                                                                        resetAllApiAiContexts();
+                                                                        changeText(packageStatus, ONYX_TV);
+                                                                        speak(packageStatus);
+
+                                                                    }
+
+                                                                    else
+                                                                    {
+
+                                                                        Toast.makeText(getApplicationContext(), "Invalid Tracker ID", Toast.LENGTH_SHORT).show();
+
+                                                                    }
+
+                                                                }
+
+                                                                else
+                                                                {
+
+                                                                    Toast.makeText(getApplicationContext(), "Please enter a valid Tracker ID", Toast.LENGTH_SHORT).show();
+
+                                                                }
+
+                                                            }
+                                                        });
+                                                        trackerIdCancelButton.setOnClickListener(new View.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(View v) {
+
+                                                                resetAllApiAiContexts();
+
+                                                                // Notify user
+
+                                                                changeText("Okay, What would you like to do?", ONYX_TV);
+                                                                speak("Okay, What would you like to do?");
+
+
+                                                            }
+                                                        });
+                                                        AlertDialog alertDialog = builder.create();
+                                                        alertDialog.show();
 
                             default: GlobalClass.logError("Undefined Action: " + result.getResult().getAction().toString() + "\nQuery: " + result.getResult().getResolvedQuery().toString(), getApplicationContext());
                                      break;
@@ -542,6 +646,19 @@ public class MainActivity extends AppCompatActivity {
                 switch(actionCode)
                 {
 
+                    case 100: changeText("Splendid! Arepresentative from DHL will soon come over to pick your parcel up.", ONYX_TV);
+                              speak("Splendid! Arepresentative from DHL will soon come over to pick your parcel up.");
+
+                              listen.setVisibility(View.VISIBLE);
+                              positiveButton.setVisibility(View.GONE);
+                              negativeButton.setVisibility(View.GONE);
+
+                              resetAllApiAiContexts();
+
+                              // Reset actionCode to '0' to avoid clashes
+
+                              actionCode = 0;
+
                     default: System.out.println("Positive Button: Unknown actionCode \'" + actionCode + "\'");
                              GlobalClass.logError("Positive Button: Unknown actionCode \'" + actionCode + "\'", getApplicationContext());
                              break;
@@ -557,6 +674,8 @@ public class MainActivity extends AppCompatActivity {
 
                 switch(actionCode)
                 {
+
+                    case 100: //TODO define actions for error correction in the order summary
 
                     default: System.out.println("Negative Button: Unknown actionCode \'" + actionCode + "\'");
                              GlobalClass.logError("Negative Button: Unknown actionCode \'" + actionCode + "\'", getApplicationContext());
@@ -595,6 +714,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onLongClick(View v) {
 
                 vibrator.vibrate(100);
+                updateFirebaseDependants();
 
                 return false;
             }
@@ -607,7 +727,7 @@ public class MainActivity extends AppCompatActivity {
 
         /* The following code will enable immersive mode for the splash screen
          * for devices running on Android 3.0 Honeycomb or higher. This will effectively
-         * enable immersive mode all of the app's instances as the app is only compatible
+         * enable immersive mode for all of the app's instances as the app is only compatible
          * with devices running on Android 6.0 Marshmallow or higher */
 
         if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.HONEYCOMB) {
@@ -714,6 +834,62 @@ public class MainActivity extends AppCompatActivity {
     {
 
         databaseReference.child("Updater").setValue(GlobalClass.randomInteger(1000, 9999));
+
+    }
+
+    private void updateFirebaseDatabase()
+    {
+
+        try
+        {
+            databaseReference.child("Users").child(senderPhoneNumber).child(trackerId).child("from").child("name").setValue(sender);
+            databaseReference.child("Users").child(senderPhoneNumber).child(trackerId).child("to").child("name").setValue(recipient);
+            databaseReference.child("Users").child(senderPhoneNumber).child(trackerId).child("from").child("contact").setValue(senderPhoneNumber);
+            databaseReference.child("Users").child(senderPhoneNumber).child(trackerId).child("to").child("contact").setValue(recipientPhoneNumber);
+            databaseReference.child("Users").child(senderPhoneNumber).child(trackerId).child("from").child("address").setValue(senderAddress);
+            databaseReference.child("Users").child(senderPhoneNumber).child(trackerId).child("to").child("address").setValue(recipientAddress);
+            databaseReference.child("Users").child(senderPhoneNumber).child(trackerId).child("description").setValue(packageDescription);
+            databaseReference.child("Users").child(senderPhoneNumber).child(trackerId).child("parcelType").setValue(packageType);
+            databaseReference.child("Users").child(senderPhoneNumber).child(trackerId).child("serviceMetrics").setValue(ORDER_SCOPE);
+            databaseReference.child("Users").child(senderPhoneNumber).child(trackerId).child("status").setValue(packageStatus);
+            databaseReference.child("Users").child(senderPhoneNumber).child(trackerId).child("weight").setValue(packageWeight);
+            databaseReference.child("Users").child(senderPhoneNumber).child(trackerId).child("weightUnit").setValue(packageWeightUnit);
+        }
+        catch (Exception e)
+        {
+
+            e.printStackTrace();
+            GlobalClass.logError(e.toString(), getApplicationContext());
+
+        }
+
+    }
+
+    private void resetAllApiAiContexts()
+    {
+
+        // Reset all API.AI contexts on a separate thread (network operation)
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                try
+                {
+
+                    aiService.resetContexts();
+
+                }
+                catch (Exception e)
+                {
+
+                    e.printStackTrace();
+                    GlobalClass.logError(e.toString(), getApplicationContext());
+
+                }
+
+            }
+        }).start();
 
     }
 

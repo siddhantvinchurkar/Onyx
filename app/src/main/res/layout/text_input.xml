@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:visibility="gone"
+        android:id="@+id/textInputSpinner">
+
+        <!-- To be modified -->
+
+    </Spinner>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/textInput"
+        android:hint="@string/text_input_hint"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:id="@+id/textInputCancelButton"
+            android:text="@string/text_input_dialog_cancel_button_text"
+            android:background="@color/colorAccent"
+            android:textSize="17sp"
+            android:textAllCaps="true"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:textColor="@color/colorWhite"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:id="@+id/textInputDoneButton"
+            android:text="@string/text_input_dialog_done_button_text"
+            android:background="@color/colorAccent"
+            android:textSize="17sp"
+            android:textAllCaps="true"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:textColor="@color/colorWhite"/>
+
+    </LinearLayout>
+
+</LinearLayout>
