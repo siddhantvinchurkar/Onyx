@@ -1,9 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <integer-array name="google_colors">
         <item>@color/colorGoogleBlue</item>
         <item>@color/colorGoogleRed</item>
         <item>@color/colorGoogleYellow</item>
         <item>@color/colorGoogleGreen</item>
     </integer-array>
+
+    <string-array name="spinnerItems">
+        <item>Your Name</item>
+        <item>Your Address</item>
+        <item>Your Phone Number</item>
+        <item>Recipient\'s Name</item>
+        <item>Recipient\'s Address</item>
+        <item>Recipient\'s Phone Number</item>
+        <item>Package Description</item>
+        <item>Package Weight (In Kilograms)</item>
+    </string-array>
+
 </resources>

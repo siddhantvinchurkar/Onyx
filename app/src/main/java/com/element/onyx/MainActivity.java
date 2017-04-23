@@ -15,9 +15,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -71,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
     ArrayList trackerIdList, userList;
+    LinearLayout buttonContainer;
 
     // Variable Declarations
 
@@ -99,6 +103,8 @@ public class MainActivity extends AppCompatActivity {
         cover = (GifImageView) findViewById(R.id.cover);
 
         onyxLogo = (ImageView) findViewById(R.id.onyxLogo);
+
+        buttonContainer = (LinearLayout) findViewById(R.id.buttonContainer);
 
         // Object Initialization
 
@@ -291,6 +297,7 @@ public class MainActivity extends AppCompatActivity {
 
                 // Calculate trackerIDIndex
 
+                trackerIdIndex = 'a';
                 trackerIdIndex += trackerIdList.size()+1;
 
                 // Sort the tracker ID list alphabetically
@@ -470,10 +477,6 @@ public class MainActivity extends AppCompatActivity {
                                                             recipientAddress = destinationStreetAddress + " " + destinationCity + " " + destinationCountry + " " + destinationZipCode;
                                                             trackerId = GlobalClass.computeTrackerIdFromPhoneNumber(senderPhoneNumber, trackerIdIndex);
 
-                                                            // Update Firebase Database
-
-                                                            updateFirebaseDatabase();
-
                                                             // Branch on the basis of service availability
 
                                                             if(DHL_SERVICE_AVAILABLE)
@@ -488,13 +491,20 @@ public class MainActivity extends AppCompatActivity {
                                                                             + " " + destinationCity + " " + destinationCountry + " - " + destinationZipCode
                                                                             + " This will cost you $ " + shippingPrice + ".");
 
+                                                                    recipientAddress = destinationStreetAddress + " " + destinationCity + " " + destinationCountry + " " + destinationZipCode;
+                                                                    senderAddress = originStreetAddress + " " + originCity + " " + originCountry + " " + originZipCode;
+
                                                                     // Verify order details
 
                                                                     listen.setVisibility(View.GONE);
-                                                                    positiveButton.setVisibility(View.VISIBLE);
+                                                                    voice.setVisibility(View.GONE);
+                                                                    buttonContainer.setVisibility(View.VISIBLE);
                                                                     positiveButton.setText("YES");
-                                                                    negativeButton.setVisibility(View.VISIBLE);
                                                                     negativeButton.setText("NO");
+
+                                                                    // Update Firebase Database
+
+                                                                    updateFirebaseDatabase();
 
                                                                     // Set actionCode value to identify button actions
 
@@ -514,7 +524,7 @@ public class MainActivity extends AppCompatActivity {
                                                         }
                                                      break;
 
-                            case "status.getTrackerId": AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+                            case "status.getTrackerId": AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                                                         builder.setCancelable(false);
                                                         LayoutInflater layoutInflater = getLayoutInflater();
                                                         View view = layoutInflater.inflate(R.layout.text_input, null);
@@ -523,6 +533,7 @@ public class MainActivity extends AppCompatActivity {
                                                         trackerIdTextView.setHint("Enter tracker ID here");
                                                         Button trackerIdDoneButton = (Button) view.findViewById(R.id.textInputDoneButton);
                                                         Button trackerIdCancelButton = (Button) view.findViewById(R.id.textInputCancelButton);
+                                                        final AlertDialog alertDialog = builder.create();
                                                         trackerIdDoneButton.setOnClickListener(new View.OnClickListener() {
                                                             @Override
                                                             public void onClick(View v) {
@@ -539,6 +550,7 @@ public class MainActivity extends AppCompatActivity {
                                                                         resetAllApiAiContexts();
                                                                         changeText(packageStatus, ONYX_TV);
                                                                         speak(packageStatus);
+                                                                        alertDialog.dismiss();
 
                                                                     }
 
@@ -570,11 +582,11 @@ public class MainActivity extends AppCompatActivity {
 
                                                                 changeText("Okay, What would you like to do?", ONYX_TV);
                                                                 speak("Okay, What would you like to do?");
+                                                                alertDialog.dismiss();
 
 
                                                             }
                                                         });
-                                                        AlertDialog alertDialog = builder.create();
                                                         alertDialog.show();
 
                             default: GlobalClass.logError("Undefined Action: " + result.getResult().getAction().toString() + "\nQuery: " + result.getResult().getResolvedQuery().toString(), getApplicationContext());
@@ -646,18 +658,22 @@ public class MainActivity extends AppCompatActivity {
                 switch(actionCode)
                 {
 
-                    case 100: changeText("Splendid! Arepresentative from DHL will soon come over to pick your parcel up.", ONYX_TV);
-                              speak("Splendid! Arepresentative from DHL will soon come over to pick your parcel up.");
+                    case 100: changeText("Splendid! A representative from DHL will soon come over to pick your parcel up.", ONYX_TV);
+                              speak("Splendid! A representative from DHL will soon come over to pick your parcel up.");
+
+                              GlobalClass.createDialogBox(MainActivity.this, "Tracker ID", "Please note down your tracker ID for future reference: " + trackerId, "Okay", getResources().getDrawable(R.mipmap.ic_launcher));
 
                               listen.setVisibility(View.VISIBLE);
-                              positiveButton.setVisibility(View.GONE);
-                              negativeButton.setVisibility(View.GONE);
+                              voice.setVisibility(View.VISIBLE);
+                              buttonContainer.setVisibility(View.GONE);
 
                               resetAllApiAiContexts();
 
                               // Reset actionCode to '0' to avoid clashes
 
                               actionCode = 0;
+
+                              break;
 
                     default: System.out.println("Positive Button: Unknown actionCode \'" + actionCode + "\'");
                              GlobalClass.logError("Positive Button: Unknown actionCode \'" + actionCode + "\'", getApplicationContext());
@@ -675,7 +691,134 @@ public class MainActivity extends AppCompatActivity {
                 switch(actionCode)
                 {
 
-                    case 100: //TODO define actions for error correction in the order summary
+                    case 100: try{changeText("I'm sorry! I guess I didn't hear you right. Why don't you type in the correct information?", ONYX_TV);
+                              speak("I'm sorry! I guess I didn't hear you right. Why don't you type in the correct information?");
+
+                              buttonContainer.setVisibility(View.GONE);
+
+                              AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                              builder.setCancelable(false);
+                              LayoutInflater layoutInflater = getLayoutInflater();
+                              View view = layoutInflater.inflate(R.layout.text_input, null);
+                              builder.setView(view);
+                              final EditText correctionTextView = (EditText) view.findViewById(R.id.textInput);
+                              correctionTextView.setHint("Enter correct information here");
+                              final Spinner correctionSpinner = (Spinner) view.findViewById(R.id.textInputSpinner);
+                              correctionSpinner.setVisibility(View.VISIBLE);
+                              Button correctionDoneButton = (Button) view.findViewById(R.id.textInputDoneButton);
+                              Button correctionCancelButton = (Button) view.findViewById(R.id.textInputCancelButton);
+                              final Button correctionUpdateButton = (Button) view.findViewById(R.id.textInputUpdateButton);
+                              correctionUpdateButton.setVisibility(View.VISIBLE);
+                              final AlertDialog alertDialog = builder.create();
+
+                              correctionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                  @Override
+                                  public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                                      switch (position)
+                                      {
+
+                                          case 0: correctionTextView.setText(sender); break;
+                                          case 1: correctionTextView.setText(senderAddress); break;
+                                          case 2: correctionTextView.setText(senderPhoneNumber); break;
+                                          case 3: correctionTextView.setText(recipient); break;
+                                          case 4: correctionTextView.setText(recipientAddress); break;
+                                          case 5: correctionTextView.setText(recipientPhoneNumber); break;
+                                          case 6: correctionTextView.setText(packageDescription); break;
+                                          case 7: correctionTextView.setText(packageWeight); break;
+                                          default: Toast.makeText(getApplicationContext(), "Please select an item to edit", Toast.LENGTH_SHORT).show(); break;
+
+                                      }
+
+                                  }
+
+                                  @Override
+                                  public void onNothingSelected(AdapterView<?> parent) {
+
+                                  }
+                              });
+
+                              correctionCancelButton.setOnClickListener(new View.OnClickListener() {
+                                  @Override
+                                  public void onClick(View v) {
+
+                                      buttonContainer.setVisibility(View.VISIBLE);
+                                      listen.setVisibility(View.GONE);
+                                      voice.setVisibility(View.GONE);
+                                      alertDialog.dismiss();
+
+                                  }
+                              });
+
+                              correctionUpdateButton.setOnClickListener(new View.OnClickListener() {
+                                  @Override
+                                  public void onClick(View v) {
+
+                                      switch (correctionSpinner.getSelectedItemPosition())
+                                      {
+
+                                          case 0: sender = correctionTextView.getText().toString(); break;
+                                          case 1: senderAddress = correctionTextView.getText().toString(); break;
+                                          case 2: senderPhoneNumber = correctionTextView.getText().toString(); break;
+                                          case 3: recipient = correctionTextView.getText().toString(); break;
+                                          case 4: recipientAddress = correctionTextView.getText().toString(); break;
+                                          case 5: recipientPhoneNumber = correctionTextView.getText().toString(); break;
+                                          case 6: packageDescription = correctionTextView.getText().toString(); break;
+                                          case 7: packageWeight = correctionTextView.getText().toString(); break;
+                                          default: Toast.makeText(getApplicationContext(), "Please select an item to edit", Toast.LENGTH_SHORT).show(); break;
+
+                                      }
+
+                                      Toast.makeText(getApplicationContext(), "Information Updated!", Toast.LENGTH_SHORT).show();
+
+                                  }
+                              });
+
+                              correctionDoneButton.setOnClickListener(new View.OnClickListener() {
+                                  @Override
+                                  public void onClick(View v) {
+
+                                      listen.setVisibility(View.VISIBLE);
+                                      voice.setVisibility(View.VISIBLE);
+                                      correctionSpinner.setVisibility(View.GONE);
+                                      correctionUpdateButton.setVisibility(View.GONE);
+                                      alertDialog.dismiss();
+
+                                      changeText("Okay " + sender + ", You have decided to send a package weighing "
+                                              + packageWeight + " " + packageWeightUnit + " to " + recipient + " residing at " + recipientAddress
+                                              + ". This will cost you $ " + shippingPrice + ".\n\nIs this information correct?", ONYX_TV);
+                                      speak("Okay " + sender + " You have decided to send a package weighing "
+                                              + packageWeight + " " + packageWeightUnit + " to " + recipient + " residing at " + recipientAddress
+                                              + " This will cost you $ " + shippingPrice + ".");
+
+                                      // Verify order details
+
+                                      listen.setVisibility(View.GONE);
+                                      voice.setVisibility(View.GONE);
+                                      buttonContainer.setVisibility(View.VISIBLE);
+                                      positiveButton.setText("YES");
+                                      negativeButton.setText("NO");
+
+                                      // Update Firebase Database
+
+                                      updateFirebaseDatabase();
+
+                                      // Set actionCode value to identify button actions
+
+                                      actionCode = 100;
+
+                                  }
+                              });
+
+                              alertDialog.show();
+
+                              resetAllApiAiContexts();
+
+                              // Reset actionCode to '0' to avoid clashes
+
+                              actionCode = 0;}catch (Exception e){ e.printStackTrace(); GlobalClass.logError(e.toString(), getApplicationContext());}
+
+                              break;
 
                     default: System.out.println("Negative Button: Unknown actionCode \'" + actionCode + "\'");
                              GlobalClass.logError("Negative Button: Unknown actionCode \'" + actionCode + "\'", getApplicationContext());
@@ -828,7 +971,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    // The following method will update all Firebase dependant variables in this class
+    /* The following method will update all Firebase dependant variables in this class */
 
     private void updateFirebaseDependants()
     {
@@ -836,6 +979,8 @@ public class MainActivity extends AppCompatActivity {
         databaseReference.child("Updater").setValue(GlobalClass.randomInteger(1000, 9999));
 
     }
+
+    /* The following method will update all variables on the Firebase Database */
 
     private void updateFirebaseDatabase()
     {
@@ -864,6 +1009,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
+    /* The following method will reset all API.AI contexts */
 
     private void resetAllApiAiContexts()
     {

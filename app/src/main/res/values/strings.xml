@@ -18,6 +18,8 @@
     <string name="text_input_hint">Enter text here</string>
     <string name="text_input_dialog_done_button_text">Done</string>
     <string name="text_input_dialog_cancel_button_text">Cancel</string>
+    <string name="text_input_dialog_update_button_text">Update</string>
+    <string name="text_input_spinner_prompt">Choose item to correct</string>
     <string name="text_line_break">------------------------------------------------------------------------</string>
 
     <string name="api_ai_client_access_token">fd0c404d8d874f3294d1eb339f3cddb0</string>
