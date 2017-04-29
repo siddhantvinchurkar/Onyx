@@ -7,8 +7,8 @@ android {
         applicationId "com.element.onyx"
         minSdkVersion 23
         targetSdkVersion 25
-        versionCode 3
-        versionName "1.0 (Alpha)"
+        versionCode 1
+        versionName "1.0 (Production)"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
     }
