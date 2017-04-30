@@ -37,3 +37,9 @@ Given enough time and data, Onyx is capable of evolving into a real-life replica
 ### Don't miss out on the opportunity.
 
 The **first one thousand people** can get a sneak peek at Onyx's [Android app](https://play.google.com/store/apps/details?id=com.marv) by becoming a beta tester on Google Play.
+
+### Questions? Queries?
+
+Connect with me on social media and we'll keep in touch.
+
+[Twitter](https://twitter.com/SidVinchurkar) | [Facebook](https://www.facebook.com/sidvinchurkar) | [Instagram](https://www.instagram.com/sidvinchurkar/?hl=en) | [LinkedIn](https://www.linkedin.com/in/siddhantvinchurkar/) | [Wordpress](https://siddhantvinchurkar.wordpress.com/)
