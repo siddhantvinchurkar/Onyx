@@ -92,11 +92,19 @@
 						<article>
 							<a href="#a1" class="image featured"><img src="images/ai_garfield.jpg" alt="Unable to render image" /></a>
 							<header>
-								<h3><a href="#a1">Don't miss out on the oppurtunity.</a></h3>
+								<h3><a href="#a1">Don't miss out on the opportunity.</a></h3>
 							</header>
 							<p>The <b>first one thousand people</b> can get a sneak peek at Onyx's <a href="https://play.google.com/store/apps/details?id=com.marv" target="_blank">Android app</a> by becoming a beta tester on Google Play.<br><br></p>
 						</article>
 					</div>
+				</section>
+
+				<section id="footbanner">
+					<header >
+						<a href="documentation/"><img src="images/documentation_icon.png" height="150px" width="150px"></img></a>
+						<h2><font color="#ffffff"><a href="documentation/">Documentation.</a></font></h2>
+						<p><font color="#ffffff">For those who want a more detailed overview of Onyx.</font></p>
+					</header>
 				</section>
 
 			<!-- Footer -->
