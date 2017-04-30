@@ -1,5 +1,5 @@
 # Onyx
-![alt text](https://raw.githubusercontent.com/siddhantvinchurkar/Onyx/blob/master/app/src/main/res/mipmap-xhdpi/ic_launcher.png)
+![Onyx](https://raw.githubusercontent.com/siddhantvinchurkar/Onyx/master/app/src/main/res/mipmap-xhdpi/ic_launcher.png)
 
 
 ### Onyx is an artificially intelligent assistive chatbot that can help you place orders with DHL or have a simple conversation.
