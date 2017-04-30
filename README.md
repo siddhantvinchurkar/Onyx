@@ -6,12 +6,12 @@
 #### What's in it?
 
 
-- [Voice commands that don't need a syntax](link.link)
-- [Onyx understands you](link.link)
-- [A good listener, a great learner](link.link)
-- [Onyx is omnipresent](link.link)
-- [A genius in the brewing](link.link)
-- [Don't miss out on the opportunity](link.link)
+- [Voice commands that don't need a syntax](#voice-commands-that-dont-need-a-syntax)
+- [Onyx understands you](#onyx-understands-you)
+- [A good listener, a great learner](#a-great-listener-a-great-learner)
+- [Onyx is omnipresent](#onyx-is-omnipresent)
+- [A genius in the brewing](#a-genius-in-the-brewing)
+- [Don't miss out on the opportunity](#dont-miss-out-on-the-opportunity)
 
 #### Voice commands that don't need a syntax
 
