@@ -1,3 +1,4 @@
+![alt text](https://raw.githubusercontent.com/siddhantvinchurkar/Onyx/master/docs/images/favicon.png)
 # Onyx
 
 
