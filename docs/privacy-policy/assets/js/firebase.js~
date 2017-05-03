@@ -1,0 +1,19 @@
+// Firebase SDK
+
+  // Set the configuration for your app
+  var config = {
+    apiKey: " AIzaSyCQmyjI98UvG0ABSsY9X1DMMLz1mL9VU2k",
+    authDomain: "onyx-794f8.firebaseapp.com",
+    databaseURL: "https://onyx-794f8.firebaseio.com",
+    storageBucket: "onyx-794f8.appspot.com"
+  };
+  firebase.initializeApp(config);
+
+  // Get a reference to the database service
+  var database = firebase.database();
+
+function writeNewEmail(email) {
+  firebase.database().ref('policyUpdateList/').set({
+    email: email
+  });
+}

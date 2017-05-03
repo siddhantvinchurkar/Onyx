@@ -1,0 +1,197 @@
+<!DOCTYPE HTML>
+<!--
+	Landed by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Privacy Policy</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
+		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+		<link rel="shortcut icon" href="images/privacy_policy.png" type="image/x-icon">
+	</head>
+	<body class="landing">
+		<div id="page-wrapper">
+
+			<!-- Header -->
+				<header id="header">
+					<h1 id="logo"><a href="../">Onyx</a></h1>
+				</header>
+
+			<!-- Banner -->
+				<section id="banner">
+					<div class="content">
+						<header>
+							<h2><a href="index.html">Privacy Policy</a></h2>
+							<p>Everyone hates a spy. And long policies.<br />
+							What you're looking at is our best effort to keep this page short.</p>
+						</header>
+						<span><img src="images/privacy_policy.png" alt="Unable to render image" /></span>
+					</div>
+					<a href="#one" class="goto-next scrolly">Next</a>
+				</section>
+
+			<!-- One -->
+				<section id="one" class="spotlight style1 bottom">
+					<span class="image fit main"><img src="images/data_collection.jpg" alt="Unable to render image" /></span>
+					<div class="content">
+						<div class="container">
+							<div class="row">
+								<div class="4u 12u$(medium)">
+									<header>
+										<h2>Data Collection</h2>
+										<p>To enhance user experience, we may collect some of your personal information. <b>This data remains confidential and secure at all times.</b> To be exact, here's a list of things we may collect from you through Onyx.</p>
+									</header>
+								</div>
+								<div class="4u 12u$(medium)">
+									<p>&bull; Identifying information such as names, addresses, phone numbers and email IDs.<br />&bull; Things you say or type while using Onyx's services.<br />&bull; Device identifiers such as UDIDs, MAC addresses and OS information.</p>
+								</div>
+								<div class="4u$ 12u$(medium)">
+									<p>&bull; Additionally, we may also collect other miscellaneous information when you contact us for support.</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<a href="#two" class="goto-next scrolly">Next</a>
+				</section>
+
+			<!-- Two -->
+				<section id="two" class="spotlight style2 right">
+					<span class="image fit main"><img src="images/machine_learning.png" alt="Unable to render image" /></span>
+					<div class="content">
+						<header>
+							<h2>What do you do with my data?</h2>
+							<p>We use it to <b>grow</b>.</p>
+						</header>
+						<p>You've come so far as to read the privacy policy. Naturally, you must know a great deal about Onyx; like the fact that she uses <a href="https://en.wikipedia.org/wiki/Machine_learning" target="_blank">Machine Learning</a> to make herself better everytime you use her. <b>Every bit of data you put through Onyx is used for her development.</b> Occasionally though, we may use your data to draw up some metrics that help us understand what you want the most.</p>
+<!-- 
+						<ul class="actions">
+							<li><a href="#" class="button">Learn More</a></li>
+						</ul>
+-->
+					</div>
+					<a href="#three" class="goto-next scrolly">Next</a>
+				</section>
+
+			<!-- Three -->
+				<section id="three" class="spotlight style3 left">
+					<span class="image fit main bottom"><img src="images/data_access.jpg" alt="Unable to render image" /></span>
+					<div class="content">
+						<header>
+							<h2>Can I access my data?</h2>
+							<p>Access it? You have absolute control over it.</p>
+						</header>
+						<p>You may use the button below to contact us and update or delete your data partially or otherwise at a moment's notice.</p>
+						<ul class="actions">
+							<li><a href="mailto:siddhantvinchurkar@gmail.com" class="button">Email the data guy</a></li>
+						</ul>
+					</div>
+					<a href="#four" class="goto-next scrolly">Next</a>
+				</section>
+
+			<!-- Four -->
+				<section id="four" class="wrapper style1 special fade-up">
+					<div class="container">
+						<header class="major">
+							<h2>Not satisfied?</h2>
+							<p>If you feel like we're violating your right to privacy, you can always tell us about it and we'll stop collecting information from you immediately. Be it that or just some clarification about the policy, we're always listening to our users.</p>
+						</header>
+						<div class="box alt">
+							<div class="row uniform">
+								<section class="4u 6u(medium) 12u$(xsmall)">
+									<span class="icon alt major fa-envelope"></span>
+									<h3>Email us</h3>
+									<p><a href="mailto:siddhantvinchurkar@gmail.com">siddhantvinchurkar@gmail.com</a><br /><a href="mailto:niranjan36x@gmail.com">niranjan36x@gmail.com</a></p>
+								</section>
+								<section class="4u 6u$(medium) 12u$(xsmall)">
+									<span class="icon alt major fa-phone"></span>
+									<h3>Call or text us</h3>
+									<p>+91 99006 08821<br />+91 81970 38839</p>
+								</section>
+								<section class="4u$ 6u(medium) 12u$(xsmall)">
+									<span class="icon alt major fa-map-marker"></span>
+									<h3>Write to us</h3>
+									<p>003, Parvati Park,<br />Dattawadi, Sinhagad Road,<br />Pune, Maharashtra - 411 030<br />India</p>
+								</section>
+							</div>
+						</div>
+						<footer class="major">
+							<ul class="actions">
+								<li><a href="#five" class="button scrolly">Is that all?</a></li>
+							</ul>
+						</footer>
+					</div>
+				</section>
+
+			<!-- Five -->
+				<section id="five" class="wrapper style2 special fade">
+					<div class="container">
+						<header>
+							<h2>Would you like to be notified when there's a policy change?</h2>
+							<p>Leave us your email and we'll take care of the rest.</p>
+						</header>
+						<form method="post" onSubmit="writeNewEmail(document.getElementById('email').value)" class="container 50%">
+							<div class="row uniform 50%">
+								<div class="8u 12u$(xsmall)"><input type="email" name="email" id="email" placeholder="Your Email Address" /></div>
+								<div class="4u$ 12u$(xsmall)"><input type="submit" value="Get Notified" class="fit special" /></div>
+							</div>
+						</form>
+					</div>
+				</section>
+
+			<!-- Footer -->
+				<footer id="footer">
+					<ul class="icons">
+						<li><a href="https://twitter.com/SidVinchurkar" class="icon alt fa-twitter"><span class="label">Twitter</span></a></li>
+						<li><a href="https://www.facebook.com/sidvinchurkar" class="icon alt fa-facebook"><span class="label">Facebook</span></a></li>
+						<li><a href="https://www.linkedin.com/in/siddhantvinchurkar/" class="icon alt fa-linkedin"><span class="label">LinkedIn</span></a></li>
+						<li><a href="https://www.instagram.com/sidvinchurkar/?hl=en" class="icon alt fa-instagram"><span class="label">Instagram</span></a></li>
+						<li><a href="https://github.com/siddhantvinchurkar" class="icon alt fa-github"><span class="label">GitHub</span></a></li>
+						<li><a href="mailto:siddhantvinchurkar@gmail.com" class="icon alt fa-envelope"><span class="label">Email</span></a></li>
+					</ul>
+					<ul class="copyright">
+						<li>&copy; <a href="https://siddhantvinchurkar.wordpress.com/">Siddhant Vinchurkar</a> & <a href="https://niranjanbca21.wordpress.com/">Niranjan Raju</a>. All rights reserved.</li>
+					</ul>
+				</footer>
+
+		</div>
+
+		<!-- Scripts -->
+			
+			<script src="https://www.gstatic.com/firebasejs/3.9.0/firebase.js"></script>
+			<script>
+			  // Initialize Firebase
+			  var config = {
+			    apiKey: "AIzaSyCQmyjI98UvG0ABSsY9X1DMMLz1mL9VU2k",
+			    authDomain: "onyx-794f8.firebaseapp.com",
+			    databaseURL: "https://onyx-794f8.firebaseio.com",
+			    projectId: "onyx-794f8",
+			    storageBucket: "onyx-794f8.appspot.com",
+			    messagingSenderId: "132706470805"
+			  };
+			  firebase.initializeApp(config);
+			// Get a reference to the database service
+			  var database = firebase.database();
+			// Add new email to the policy update list
+			function writeNewEmail(email) {
+			  var data={};
+			  data[email] = "hey";
+			  firebase.database().ref('policyUpdateList/').update(data);
+			}
+			</script>
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/jquery.dropotron.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/skel.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
