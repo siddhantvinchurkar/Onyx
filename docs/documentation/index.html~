@@ -51,7 +51,7 @@
 							<a href="#one" class="image"><img src="images/android.png" alt="Unable to render image" data-position="center center" /></a>
 							<div class="content">
 								<div class="inner">
-									<h2><a href="https://play.google.com/store/apps/details?id=com.marv/" target="_blank">Onyx for Android</a></h2>
+									<h2><a href="https://play.google.com/store/apps/details?id=com.element.onyx/" target="_blank">Onyx for Android</a></h2>
 									<p>Onyx is built for Android natively using Java. This is an open source project and you may find the source code on <a href="https://www.github.com/siddhantvinchurkar/Onyx/" target="_blank">GitHub</a>.</p>
 									<ul class="actions">
 										<li><a href="#yerdu" class="button scrolly">Keep going &darr;</a></li>
@@ -109,12 +109,12 @@
 								<section>
 									<span class="icon major fa-exchange fa-spin fa-1x fa-fw"></span>
 									<h3>How <a href="https://api.ai/" target="_blank">API.AI</a> connects to <a href="https://play.google.com/store/apps/details?id=com.marv/" target="_blank">Onyx for Android</a></h3>
-									<p>This is a fairly simple process. <a href="https://play.google.com/store/apps/details?id=com.marv/" target="_blank">Onyx for Android</a> uses the <a href="https://github.com/api-ai/apiai-android-client" target="_blank">SDK</a> provided by <a href="https://api.ai/" target="_blank">API.AI</a> to directly connect to and transfer data between the service and the app.</p>
+									<p>This is a fairly simple process. <a href="https://play.google.com/store/apps/details?id=com.element.onyx/" target="_blank">Onyx for Android</a> uses the <a href="https://github.com/api-ai/apiai-android-client" target="_blank">SDK</a> provided by <a href="https://api.ai/" target="_blank">API.AI</a> to directly connect to and transfer data between the service and the app.</p>
 								</section>
 								<section>
 									<span class="icon major fa-exclamation-triangle fa-spin fa-1x fa-fw"></span>
 									<h3>Known issues</h3>
-									<p>&bull; <a href="https://www.facebook.com/onyxai" target="_blank">Onyx for Facebook Messenger</a> does not store any information on <a href="https://firebase.google.com/" target="_blank">Firebase</a>, correctly parse <a href="https://api.ai/" target="_blank">API.AI</a>'s response or react to emoji.</p><p>&bull; <a href="https://play.google.com/store/apps/details?id=com.marv/" target="_blank">Onyx for Android</a> fails to successfully serve a returning customer due to a recurring bug that prevents the app from collecting the recipient's phone number.</p><p>&bull; Due to lack of data to fuel <a href="https://en.wikipedia.org/wiki/Machine_learning" target="_blank">Machine Learning</a>, Onyx tends to feel quite machine-like, a serious setback for a chatbot that aims to feel as human as possible.</p>
+									<p>&bull; <a href="https://www.facebook.com/onyxai" target="_blank">Onyx for Facebook Messenger</a> does not store any information on <a href="https://firebase.google.com/" target="_blank">Firebase</a>, correctly parse <a href="https://api.ai/" target="_blank">API.AI</a>'s response or react to emoji.</p><p>&bull; <a href="https://play.google.com/store/apps/details?id=com.element.onyx/" target="_blank">Onyx for Android</a> fails to successfully serve a returning customer due to a recurring bug that prevents the app from collecting the recipient's phone number.</p><p>&bull; Due to lack of data to fuel <a href="https://en.wikipedia.org/wiki/Machine_learning" target="_blank">Machine Learning</a>, Onyx tends to feel quite machine-like, a serious setback for a chatbot that aims to feel as human as possible.</p>
 								</section>
 								<section>
 									<span class="icon major fa-diamond fa-spin fa-1x fa-fw"></span>
@@ -177,7 +177,7 @@
 			<footer id="footer" class="wrapper style1-alt">
 				<div class="inner">
 					<ul class="menu">
-						<li>&copy; <a href="https://siddhantvinchurkar.wordpress.com/">Siddhant Vinchurkar</a> & <a href="https://niranjanbca21.wordpress.com/">Niranjan Raju</a>. All rights reserved. | <a href="../privacy-policy">Privacy Policy</a></li>
+						<li>&copy; <a href="https://siddhantvinchurkar.wordpress.com/">Siddhant Vinchurkar</a> & <a href="https://niranjanbca21.wordpress.com/">Niranjan Raju</a>. All rights reserved. | <a href="../privacy-policy/">Privacy Policy</a></li>
 					</ul>
 				</div>
 			</footer>

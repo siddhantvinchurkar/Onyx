@@ -31,7 +31,7 @@
 								<p>Artificial Intelligence. Personified.</p>
 							</header>
 							<footer>
-								<a href="#banner"><font size="6">&darr;</font></a>
+								<a href="#banner" class="scrolly"><font size="6">&darr;</font></a>
 							</footer>
 						</div>
 
@@ -78,7 +78,7 @@
 							<header>
 								<h3><a href="#a1">Onyx is omnipresent.<br><br></a></h3>
 							</header>
-							<p>From an <a href="https://play.google.com/store/apps/details?id=com.marv" target="_blank">Android app</a> to a <a href="https://www.facebook.com/onyxai" target="_blank">Facebook Messenger chatbot</a>, Onyx strives to venture onto new platforms.<br><br></p>
+							<p>From an <a href="https://play.google.com/store/apps/details?id=com.element.onyx" target="_blank">Android app</a> to a <a href="https://www.facebook.com/onyxai" target="_blank">Facebook Messenger chatbot</a>, Onyx strives to venture onto new platforms.<br><br></p>
 						</article>
 
 						<article>
