@@ -4,6 +4,8 @@
 
 ### *Onyx is an artificially intelligent assistive chatbot that can help you place orders with DHL or have a simple conversation.*
 
+[![StackShare](https://img.shields.io/badge/tech-stack-0690fa.svg?style=flat)](https://stackshare.io/siddhantvinchurkar/onyx)
+
 ### What's in it?
 
 
