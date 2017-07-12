@@ -38,7 +38,7 @@ dependencies {
 
     compile 'com.android.support:appcompat-v7:25.3.0'
     compile 'com.android.support:design:25.3.0'
-    compile 'com.google.firebase:firebase-database:10.2.0'
+    compile 'com.google.firebase:firebase-database:11.0.2'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.github.paolorotolo:appintro:4.1.0'
     compile 'pl.droidsonroids.gif:android-gif-drawable:1.2.6'
@@ -49,6 +49,7 @@ dependencies {
     compile 'hanks.xyz:htextview-library:0.1.5'
     compile 'ai.api:libai:1.4.8'
     compile 'ai.api:sdk:2.0.5@aar'
+    compile 'com.android.support:multidex:1.0.1'
     compile 'com.google.code.gson:gson:2.3.1'
     compile 'commons-io:commons-io:2.4'
     testCompile 'junit:junit:4.12'
