@@ -3,12 +3,16 @@ package com.element.onyx;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.speech.tts.TextToSpeech;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -42,6 +46,8 @@ import ai.api.android.AIService;
 import ai.api.model.AIError;
 import ai.api.model.AIResponse;
 import pl.droidsonroids.gif.GifImageView;
+
+import static android.Manifest.permission.RECORD_AUDIO;
 
 /**
  * This code is in no manner open for anyone to use. The use of this code
@@ -159,6 +165,17 @@ public class MainActivity extends AppCompatActivity {
         // Greet user
 
         changeText(getResources().getString(R.string.default_greeting), USER_TV);
+
+        // Manage permissions
+
+        if(ContextCompat.checkSelfPermission(getApplicationContext(),
+                RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED)
+        {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{RECORD_AUDIO}, 0);
+
+        }
 
         // Begin animation sequence
 
@@ -924,6 +941,33 @@ public class MainActivity extends AppCompatActivity {
         }
         super.onPause();
     }
+
+    // Permission Handling
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode)
+        {
+
+            case 0:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                {
+                    // Permission Granted. Do Nothing.
+                }
+                else
+                {
+
+                    Toast.makeText(getApplicationContext(), "Onyx will not function as expected if you " +
+                            "do not grant it the necessary permissions",Toast.LENGTH_LONG).show();
+
+                }
+
+        }
+    }
+
 
     // Private Methods
 

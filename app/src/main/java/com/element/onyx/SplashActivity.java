@@ -188,49 +188,6 @@ public class SplashActivity extends AppCompatActivity {
 
                         // Onyx's services are active; continue startup
 
-                        /* The following block of code will trigger a five second delay
-                         * and then branch depending upon the value of 'APP_LAUNCH_FIRST' */
-
-                        class Delay implements Runnable{
-
-                            @Override
-                            public void run() {
-                                // TODO Auto-generated method stub
-                                for (int i=0;i<=1;i++){
-                                    try{
-                                        Thread.sleep(5000);
-                                    }catch(InterruptedException e){
-                                        e.printStackTrace();
-                                    }
-                                    handler.post(new Runnable() {
-
-                                        @Override
-                                        public void run() {
-
-                                            // Branch point
-
-                                            if(GlobalClass.isAppLaunchFirst(getApplicationContext()))
-                                            {
-
-                                                animationState = false;
-                                                GlobalClass.setAppLaunchFirst(getApplicationContext());
-                                                startActivity(new Intent(SplashActivity.this, IntroductionActivity.class));
-
-                                            }
-                                            else
-                                            {
-
-                                                animationState = false;
-                                                startActivity(new Intent(SplashActivity.this,MainActivity.class));
-
-                                            }
-
-                                        }
-                                    });
-                                }
-
-                            }}
-
                         // Check for root access
 
                         if(GlobalClass.isRootAvailable(getApplicationContext()))GlobalClass.rootAvailable = true;
@@ -238,7 +195,31 @@ public class SplashActivity extends AppCompatActivity {
 
                         // Startup successful; Start Onyx
 
-                        new Thread(new Delay()).start();    // Starts thread
+                        /* The following block of code will trigger a five second delay
+                         * and then branch depending upon the value of 'APP_LAUNCH_FIRST' */
+
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                // Branch point
+
+                                if(GlobalClass.isAppLaunchFirst(getApplicationContext()))
+                                {
+
+                                    animationState = false;
+                                    GlobalClass.setAppLaunchFirst(getApplicationContext());
+                                    startActivity(new Intent(SplashActivity.this, IntroductionActivity.class));
+
+                                }
+                                else
+                                {
+
+                                    animationState = false;
+                                    startActivity(new Intent(SplashActivity.this,MainActivity.class));
+
+                                }
+                            }
+                        },5000);
 
                     }
 
@@ -313,6 +294,7 @@ public class SplashActivity extends AppCompatActivity {
          * should the user press the back button */
 
         finish();
+        handler.removeCallbacksAndMessages(null);
 
         super.onPause();
     }
