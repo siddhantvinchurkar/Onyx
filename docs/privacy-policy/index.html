@@ -14,6 +14,21 @@
 		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
 		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
 		<link rel="shortcut icon" href="images/privacy_policy.png" type="image/x-icon">
+		<script src="https://www.gstatic.com/firebasejs/4.1.3/firebase.js"></script>
+			<script>
+			// Set the configuration for your app
+  			// TODO: Replace with your project's config object
+  			var config = {
+			    apiKey: "AIzaSyCQmyjI98UvG0ABSsY9X1DMMLz1mL9VU2k",
+			    authDomain: "onyx-794f8.firebaseapp.com",
+			    databaseURL: "https://onyx-794f8.firebaseio.com",
+			    projectId: "onyx-794f8",
+			    storageBucket: "onyx-794f8.appspot.com",
+			    messagingSenderId: "132706470805"
+			  };
+  			  firebase.initializeApp(config);
+			  function updateIt(email){firebase.database().ref("policyUpdateList").set({[email] : 'email'});}
+			</script>
 	</head>
 	<body class="landing">
 		<div id="page-wrapper">
@@ -135,10 +150,10 @@
 							<h2>Would you like to be notified when there's a policy change?</h2>
 							<p>Leave us your email and we'll take care of the rest.</p>
 						</header>
-						<form method="post" onSubmit="writeNewEmail(document.getElementById('email').value)" class="container 50%">
+						<form method="post" onsubmit="writeNewEmail(document.getElementById("email").value);" class="container 50%">
 							<div class="row uniform 50%">
 								<div class="8u 12u$(xsmall)"><input type="email" name="email" id="email" placeholder="Your Email Address" /></div>
-								<div class="4u$ 12u$(xsmall)"><input type="submit" value="Get Notified" class="fit special" /></div>
+								<div class="4u$ 12u$(xsmall)"><input type="submit" name="submit" id="submit" value="Get Notified" class="fit special" /></div>
 							</div>
 						</form>
 					</div>
@@ -163,27 +178,6 @@
 
 		<!-- Scripts -->
 			
-			<script src="https://www.gstatic.com/firebasejs/3.9.0/firebase.js"></script>
-			<script>
-			  // Initialize Firebase
-			  var config = {
-			    apiKey: "AIzaSyCQmyjI98UvG0ABSsY9X1DMMLz1mL9VU2k",
-			    authDomain: "onyx-794f8.firebaseapp.com",
-			    databaseURL: "https://onyx-794f8.firebaseio.com",
-			    projectId: "onyx-794f8",
-			    storageBucket: "onyx-794f8.appspot.com",
-			    messagingSenderId: "132706470805"
-			  };
-			  firebase.initializeApp(config);
-			// Get a reference to the database service
-			  var database = firebase.database();
-			// Add new email to the policy update list
-			function writeNewEmail(email) {
-			  var data={};
-			  data[email] = "hey";
-			  firebase.database().ref('policyUpdateList/').update(data);
-			}
-			</script>
 			<script src="assets/js/jquery.min.js"></script>
 			<script src="assets/js/jquery.scrolly.min.js"></script>
 			<script src="assets/js/jquery.dropotron.min.js"></script>
