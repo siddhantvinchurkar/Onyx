@@ -8,7 +8,15 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.Uri;
+import android.util.Log;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.common.io.Files;
 import com.scottyab.rootbeer.RootBeer;
 
@@ -19,12 +27,15 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.Random;
 import java.util.TimeZone;
 
@@ -52,6 +63,10 @@ public class GlobalClass {
      * stale value and thus needs regular updating */
 
     public static boolean rootAvailable = false;
+
+    /* The following String object stores the name of the country Onyx was accessed from */
+
+    public static String onyxCountry = "India";
 
     /* The following method will check for internet access and return a boolean value:
      * true: internet access available
@@ -433,6 +448,101 @@ public class GlobalClass {
         else packageType = "Custom";
 
         return packageType;
+
+    }
+
+    // The following method determines the name of the country Onyx was accessed from
+
+    public static final String determineCountryByIP(String IP, Context context)
+    {
+
+        // Instantiate the RequestQueue
+
+        RequestQueue queue = Volley.newRequestQueue(context);
+        String url = "https://api.shodan.io/shodan/host/" + IP + "?key=" + context.getString(R.string.shodan_api_key);
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        onyxCountry = extractFromJSONObject(extractFromJSONObject(response, "data"), "country_name");
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+        // Add the request to the RequestQueue.
+
+        queue.add(stringRequest);
+        return onyxCountry;
+
+    }
+
+    // The following method determines the public IP address of the device
+
+    public static final String determinePublicIP()
+    {
+
+        try {
+            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces();
+                 en.hasMoreElements();) {
+                NetworkInterface intf = en.nextElement();
+                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
+                    InetAddress inetAddress = enumIpAddr.nextElement();
+                    if (!inetAddress.isLoopbackAddress()) {
+                        return inetAddress.getHostAddress().toString();
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            Log.e("IP Address", ex.toString());
+            return "106.51.148.179";
+        }
+
+        return null;
+
+    }
+
+    // The following method determines the country based on a given city
+
+    public static final String determineCountryByCity(String city, final Context context)
+    {
+        // Instantiate the RequestQueue
+
+        RequestQueue queue = Volley.newRequestQueue(context);
+        String url = "http://maps.googleapis.com/maps/api/geocode/json?address="+ city +"&sensor=false";
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try
+                        {
+                            JSONObject jsonObject = new JSONObject(response);
+                            JSONArray jsonArray = jsonObject.getJSONArray("results");
+                            JSONObject jsonObject2 = jsonArray.getJSONObject(0);
+                            JSONArray jsonArray2 = jsonObject2.getJSONArray("address_components");
+                            JSONObject jsonObject3 = jsonArray2.getJSONObject(jsonArray2.length()-1);
+                            onyxCountry = jsonObject3.getString("long_name");
+
+                        }
+                        catch (Throwable t)
+                        {
+                            System.out.println(t.toString());
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+        // Add the request to the RequestQueue.
+
+        queue.add(stringRequest);
+        return onyxCountry;
 
     }
 

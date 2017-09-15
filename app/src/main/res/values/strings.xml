@@ -24,6 +24,8 @@
 
     <string name="api_ai_client_access_token">fd0c404d8d874f3294d1eb339f3cddb0</string>
 
+    <string name="shodan_api_key">2X7ymEt9qcTxGBXNhiix52mM1yRNN2kL</string>
+
     <string name="action_settings">Settings</string>
     <string name="title_activity_settings">Settings</string>
 

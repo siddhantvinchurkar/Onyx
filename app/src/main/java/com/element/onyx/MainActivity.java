@@ -72,7 +72,8 @@ public class MainActivity extends AppCompatActivity {
             senderFirstName, recipientFirstName, senderLastName, recipientLastName, packageWeight,
             packageWeightUnit, originStreetAddress, destinationStreetAddress, originZipCode,
             destinationZipCode, sender, recipient, ORDER_SCOPE, senderPhoneNumber, recipientPhoneNumber,
-            trackerId, senderAddress, recipientAddress, packageDescription, packageType, packageStatus;
+            trackerId, senderAddress, recipientAddress, packageDescription, packageType, packageStatus,
+            serviceCity;
     Typeface ubuntu_r;
     TextToSpeech tts;
     Handler handler;
@@ -605,6 +606,36 @@ public class MainActivity extends AppCompatActivity {
                                                             }
                                                         });
                                                         alertDialog.show();
+
+                            case "service.available.kl":
+                                                         serviceCity = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "geo-city");
+
+                                                         // The following piece of code will determine the country Onyx is accessed from
+
+                                                         GlobalClass.onyxCountry = GlobalClass.determineCountryByCity(serviceCity, getApplicationContext());
+
+                                                         // The following piece of code ensures the country is loaded in advance
+
+                                                         new Handler().postDelayed(new Runnable() {
+                                                             @Override
+                                                             public void run() {
+                                                                 if(GlobalClass.verifyCity(GlobalClass.getCityList(GlobalClass.onyxCountry, getApplicationContext()), serviceCity))
+                                                                 {
+
+                                                                     changeText("The DHL service is available in " + serviceCity, ONYX_TV);
+                                                                     speak("The DHL service is available in " + serviceCity);
+
+                                                                 }
+                                                                 else
+                                                                 {
+
+                                                                     changeText("Sorry, DHL does not serve " + serviceCity, ONYX_TV);
+                                                                     speak("Sorry, DHL does not serve " + serviceCity);
+
+                                                                 }
+                                                             }
+                                                         }, 1000);
+                                                         break;
 
                             default: GlobalClass.logError("Undefined Action: " + result.getResult().getAction().toString() + "\nQuery: " + result.getResult().getResolvedQuery().toString(), getApplicationContext());
                                      break;
