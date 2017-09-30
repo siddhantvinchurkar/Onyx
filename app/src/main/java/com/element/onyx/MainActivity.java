@@ -1,5 +1,6 @@
 package com.element.onyx;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -28,6 +29,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.johnpersano.supertoasts.library.Style;
+import com.github.johnpersano.supertoasts.library.SuperActivityToast;
+import com.github.johnpersano.supertoasts.library.utils.PaletteUtils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -120,6 +124,35 @@ public class MainActivity extends AppCompatActivity {
         fadeInQuick = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in_quick);
         fadeOutQuick = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_out_quick);
         fadeOutQuick2 = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_out_quick);
+
+        /* Display Custom Toasts after a 1 second delay */
+
+        final Activity activity = this;
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                // Display Custom Toast
+
+                SuperActivityToast.create(activity, new Style(), Style.TYPE_STANDARD)
+                        .setText("Hello, human!")
+                        .setDuration(Style.DURATION_SHORT)
+                        .setFrame(Style.FRAME_STANDARD)
+                        .setColor(PaletteUtils.getSolidColor(PaletteUtils.MATERIAL_PINK))
+                        .setAnimations(Style.ANIMATIONS_POP).show();
+
+                // Display Custom Toast
+
+                SuperActivityToast.create(activity, new Style(), Style.TYPE_STANDARD)
+                        .setText("Long Press the mic button for settings.")
+                        .setDuration(Style.DURATION_SHORT)
+                        .setFrame(Style.FRAME_STANDARD)
+                        .setColor(PaletteUtils.getSolidColor(PaletteUtils.MATERIAL_PINK))
+                        .setAnimations(Style.ANIMATIONS_POP).show();
+
+            }
+        }, 1000);
 
         config = new AIConfiguration(getResources().getString(R.string.api_ai_client_access_token),
                 AIConfiguration.SupportedLanguages.English,
@@ -906,6 +939,8 @@ public class MainActivity extends AppCompatActivity {
 
                 vibrator.vibrate(100);
                 updateFirebaseDependants();
+                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                finish();
 
                 return false;
             }

@@ -4,9 +4,14 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorBlack">#000000</color>
+    <color name="colorGrey">#D2D2D2</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorGoogleBlue">#4885ED</color>
     <color name="colorGoogleRed">#DB3236</color>
     <color name="colorGoogleYellow">#F4C20D</color>
     <color name="colorGoogleGreen">#3CBA54</color>
+
+    <color name="black_overlay">#66000000</color>
+    <color name="white_overlay">#AFFFFFFF</color>
+    <color name="transparent_overlay">#00000000</color>
 </resources>

@@ -59,6 +59,13 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity android:name=".SettingsActivity" />
+        <activity
+            android:name=".EasterEggActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_easter_egg"
+            android:theme="@style/FullscreenTheme" />
+        <activity android:name=".DevelopersActivity"></activity>
     </application>
 
 </manifest>

@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/constraintlayout"
+    android:background="@drawable/animated_background"
+    tools:context="com.element.onyx.DevelopersActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black_overlay"
+        tools:layout_editor_absoluteY="8dp"
+        tools:layout_editor_absoluteX="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="30sp"
+            android:background="@color/transparent_overlay">
+
+            <android.support.v7.widget.CardView
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/siddhant_card"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="200sp"
+                android:padding="10sp"
+                card_view:cardBackgroundColor="@color/colorWhite"
+                card_view:cardCornerRadius="4dp"
+                card_view:cardElevation="5sp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/siddhant_cover">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white_overlay">
+
+                <ImageView
+                    android:layout_width="100sp"
+                    android:layout_height="100sp"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:padding="10sp"
+                    android:src="@drawable/siddhant_profile"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/siddhant_name"
+                        android:layout_marginTop="15sp"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentLeft="true"
+                        android:text="Siddhant Vinchurkar"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorBlack"
+                        android:padding="10sp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:text="Android Developer. Tech Enthusiast. Crazy."
+                        android:textSize="10sp"
+                        android:layout_below="@id/siddhant_name"
+                        android:padding="10sp"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginBottom="20sp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="50sp"
+                            android:layout_height="50sp"
+                            android:src="@drawable/fb"
+                            android:layout_weight="1"
+                            android:id="@+id/siddhant_facebook"/>
+                        <ImageView
+                            android:layout_width="50sp"
+                            android:layout_height="50sp"
+                            android:src="@drawable/wordpress"
+                            android:layout_weight="1"
+                            android:id="@+id/siddhant_wordpress"/>
+
+                    </LinearLayout>
+
+                </RelativeLayout>
+                </LinearLayout>
+
+                </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/wilbun_card"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="200sp"
+                android:padding="10sp"
+                card_view:cardBackgroundColor="@color/colorWhite"
+                card_view:cardCornerRadius="4dp"
+                card_view:cardElevation="5sp"
+                android:layout_marginTop="50sp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/wilbun_cover">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/white_overlay">
+
+                        <ImageView
+                            android:layout_width="100sp"
+                            android:layout_height="100sp"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentTop="true"
+                            android:padding="10sp"
+                            android:src="@drawable/wilbun_profile"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/wilbun_name"
+                            android:layout_marginTop="15sp"
+                            android:layout_alignParentTop="true"
+                            android:layout_alignParentLeft="true"
+                            android:text="Wilbun Rodrigues"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/colorBlack"
+                            android:padding="10sp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:text="One word. Musician."
+                            android:textSize="10sp"
+                            android:layout_below="@id/wilbun_name"
+                            android:padding="10sp"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentBottom="true"
+                            android:layout_marginBottom="20sp"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="50sp"
+                                android:layout_height="50sp"
+                                android:src="@drawable/fb"
+                                android:layout_weight="1"
+                                android:id="@+id/wilbun_facebook"/>
+                            <ImageView
+                                android:layout_width="50sp"
+                                android:layout_height="50sp"
+                                android:src="@drawable/wordpress"
+                                android:layout_weight="1"
+                                android:id="@+id/wilbun_wordpress"/>
+
+                        </LinearLayout>
+
+                    </RelativeLayout>
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/niranjan_card"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="200sp"
+                android:padding="10sp"
+                card_view:cardBackgroundColor="@color/colorWhite"
+                card_view:cardCornerRadius="4dp"
+                card_view:cardElevation="5sp"
+                android:layout_marginTop="50sp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/niranjan_cover">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/white_overlay">
+
+                        <ImageView
+                            android:layout_width="100sp"
+                            android:layout_height="100sp"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentTop="true"
+                            android:padding="10sp"
+                            android:src="@drawable/niranjan_profile"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/niranjan_name"
+                            android:layout_marginTop="15sp"
+                            android:layout_alignParentTop="true"
+                            android:layout_alignParentLeft="true"
+                            android:text="Niranjan Raju"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/colorBlack"
+                            android:padding="10sp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:text="Gaming is life."
+                            android:textSize="10sp"
+                            android:layout_below="@id/niranjan_name"
+                            android:padding="10sp"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentBottom="true"
+                            android:layout_marginBottom="20sp"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="50sp"
+                                android:layout_height="50sp"
+                                android:src="@drawable/fb"
+                                android:layout_weight="1"
+                                android:id="@+id/niranjan_facebook"/>
+                            <ImageView
+                                android:layout_width="50sp"
+                                android:layout_height="50sp"
+                                android:src="@drawable/wordpress"
+                                android:layout_weight="1"
+                                android:id="@+id/niranjan_wordpress"/>
+
+                        </LinearLayout>
+
+                    </RelativeLayout>
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</android.support.constraint.ConstraintLayout>
