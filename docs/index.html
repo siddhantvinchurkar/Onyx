@@ -1,19 +1,16 @@
 <!DOCTYPE HTML>
-<!--
-	Helios by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
-<html>
+<html lang="en">
 	<head>
 		<title>Onyx</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
+		<meta name="theme-color" content="#ff5722">
 		<link rel="stylesheet" href="assets/css/main.css" />
 		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
 		<link rel="stylesheet" href="assets/css/popup.css" />
 		<link rel="shortcut icon" href="images/favicon.png" type="image/x-icon">
+		<link rel="manifest" href="manifest.json">
 	</head>
 	<body class="homepage">
 		<div id="page-wrapper">
@@ -111,6 +108,11 @@
 						<h2><font color="#ffffff"><a href="documentation/">Documentation.</a></font></h2>
 						<p><font color="#ffffff">For those who want a more detailed overview of Onyx.</font></p>
 						<h2><font color="#ffffff"><a href="trynow/">Try it now!</a></font></ br></ br></h2>
+						<br />
+						<br />
+			
+<h2><font color="#ffffff">Are you a beta tester?<br />Upgrade to the alpha channel and have Onyx recognize you.</font></h2>
+						<p><font color="#ffffff"><a href="dev-assist-program/">Learn more</a></font></ br></ br></p>
 					</header>
 				</section>
 
@@ -156,6 +158,14 @@
 			<script src="assets/js/jquery.onvisible.min.js"></script>
 			<script src="assets/js/skel.min.js"></script>
 			<script src="assets/js/util.js"></script>
+			<script src="sw.js"></script>
+		<script>
+		if('serviceWorker' in navigator) {
+		  navigator.serviceWorker
+		           .register('sw.js')
+		           .then(function() { console.log("Service Worker Registered"); });
+		}
+		</script>
 			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
 			<script src="assets/js/main.js"></script>
 			<script>

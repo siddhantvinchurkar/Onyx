@@ -1,0 +1,16 @@
+{
+  "short_name": "Onyx",
+  "name": "Onyx AI",
+  "icons": [
+    {
+      "src": "images/favicon.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#ff5722",
+  "theme_color": "#ff5722",
+  "orientation": "portrait"
+}

@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+<html lang="en">
+	<head>
+		<title>Onyx Development Assistant Program</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
+		<link rel="shortcut icon" href="../images/favicon-dev.png" type="image/x-icon">
+	</head>
+	<body>
+
+		<img src="../images/favicon-dev.png" height="128" width="128"/>
+
+		<!-- Header -->
+			<header id="header">
+				<h1>Onyx Development Assistant Program</h1>
+			<p>The Onyx Development Assistant Program allows beta testers to help develop <a href="http://onyxai.cf">Onyx</a>.
+			<br />Signing up for this program will upgrade you to an alpha tester and as a perk, Onyx will be trained to recognize you.</p>
+			</header>
+
+		<!-- Signup Form -->
+			<form id="signup-form" method="post" action="#">
+				<input type="email" name="email" id="email" placeholder="Email Address" />
+				<input type="submit" id="submit-form" value="Sign Up" />
+			</form>
+
+		<!-- Footer -->
+			<footer id="footer">
+				<ul class="icons">
+		<li><a href="https://twitter.com/SidVinchurkar" target="_blank" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
+	<li><a href="https://www.facebook.com/sidvinchurkar" class="icon fa-facebook" target="_blank"><span class="label">Facebook</span></a></li>
+<li><a href="https://www.instagram.com/sidvinchurkar/?hl=en" target="_blank" class="icon fa-instagram"><span class="label">Instagram</span></a></li>
+	<li><a href="https://www.github.com/siddhantvinchurkar/" target="_blank" class="icon fa-github"><span class="label">GitHub</span></a></li>
+<li><a href="https://www.linkedin.com/in/siddhantvinchurkar/" class="icon fa-linkedin" target="_blank"	><span class="label">Linkedin</span></a></li>
+				<li><a href="mailto:siddhantvinchurkar@gmail.com" class="icon fa-envelope-o"><span class="label">Email</span></a></li>
+				</ul>
+				<ul class="copyright">
+					<li>&copy; <a href="https://siddhantvinchurkar.wordpress.com/">Siddhant Vinchurkar</a>, <a href="https://niranjanbca21.wordpress.com/">Niranjan Raju</a> and <a href="https://wilbunfrank.wordpress.com/">Wilbun Rodrigues</a>. All rights reserved. | <a href="../privacy-policy/">Privacy Policy</a></li>
+				</ul>
+			</footer>
+
+		<!-- Scripts -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script>
+var $form = $('form#signup-form'),
+    url = 'https://script.google.com/macros/s/AKfycbxH5qYYBqfiDhcvQpVdqw5RqskycQWFKV8XvAvkLc8Zfe1Tnto/exec'
+
+$('#submit-form').on('click', function(e) {
+  e.preventDefault();
+  var jqxhr = $.ajax({
+    url: url,
+    method: "GET",
+    dataType: "json",
+    data: $form.serialize()
+  }).success(
+    // do something
+	window.location="../odap-success"
+  );
+})
+</script>
+			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
