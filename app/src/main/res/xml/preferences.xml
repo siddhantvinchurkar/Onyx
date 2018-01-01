@@ -7,7 +7,7 @@
         <Preference
             android:summary="Onyx is an artificially intelligent assistive chatbot that can help you place orders with DHL or have a simple conversation."
             android:icon="@drawable/ic_launcher"
-            android:title="Onyx. Artificial Intelligence. Personified."
+            android:title="Onyx. AI. Personified."
             android:defaultValue="false">
             <intent android:targetPackage="com.element.onyx"
                 android:targetClass="com.element.onyx.EasterEggActivity"/>
@@ -34,7 +34,6 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="Congratulations! You are one of the first 1000 lucky people who get to experience Onyx before
-it is released to the public.\n\nAds? Don't complain. They support Onyx.\n\nFeel free to provide feedback on the Play Store."/>
+        android:title="Developer Edition.\n\nNo ads for you. You develop Onyx.\n\nFeel free to provide feedback on the Play Store."/>
 
 </PreferenceScreen>

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Vibrator;
@@ -45,10 +46,14 @@ import java.util.Locale;
 import java.util.Objects;
 
 import ai.api.AIListener;
+import ai.api.AIServiceException;
 import ai.api.android.AIConfiguration;
+import ai.api.android.AIDataService;
 import ai.api.android.AIService;
 import ai.api.model.AIError;
+import ai.api.model.AIRequest;
 import ai.api.model.AIResponse;
+import ai.api.model.Result;
 import pl.droidsonroids.gif.GifImageView;
 
 import static android.Manifest.permission.RECORD_AUDIO;
@@ -64,8 +69,9 @@ public class MainActivity extends AppCompatActivity {
     // Object Declarations
 
     TextView usertv, onyxtv;
+    EditText textOnyxInput;
     HTextView voice;
-    Button positiveButton, negativeButton;
+    Button positiveButton, negativeButton, textInputCancelButton, textInputDoneButton;
     FloatingActionButton listen;
     ImageView onyxLogo;
     GifImageView cover;
@@ -129,6 +135,10 @@ public class MainActivity extends AppCompatActivity {
 
         final Activity activity = this;
 
+        // Tell user how to use text mode
+
+        voice.animateText("Tap here to use text");
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -136,23 +146,15 @@ public class MainActivity extends AppCompatActivity {
                 // Display Custom Toast
 
                 SuperActivityToast.create(activity, new Style(), Style.TYPE_STANDARD)
-                        .setText("Hello, human!")
-                        .setDuration(Style.DURATION_SHORT)
-                        .setFrame(Style.FRAME_STANDARD)
-                        .setColor(PaletteUtils.getSolidColor(PaletteUtils.MATERIAL_PINK))
-                        .setAnimations(Style.ANIMATIONS_POP).show();
-
-                // Display Custom Toast
-
-                SuperActivityToast.create(activity, new Style(), Style.TYPE_STANDARD)
                         .setText("Long Press the mic button for settings.")
                         .setDuration(Style.DURATION_SHORT)
                         .setFrame(Style.FRAME_STANDARD)
-                        .setColor(PaletteUtils.getSolidColor(PaletteUtils.MATERIAL_PINK))
+                        .setColor(PaletteUtils.getSolidColor(PaletteUtils.MATERIAL_DEEP_ORANGE))
                         .setAnimations(Style.ANIMATIONS_POP).show();
+                voice.animateText("Say something...");
 
             }
-        }, 1000);
+        }, 3000);
 
         config = new AIConfiguration(getResources().getString(R.string.api_ai_client_access_token),
                 AIConfiguration.SupportedLanguages.English,
@@ -910,6 +912,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        /* Click listeners for UI elements */
+
         listen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -943,6 +947,434 @@ public class MainActivity extends AppCompatActivity {
                 finish();
 
                 return false;
+            }
+        });
+
+        voice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                /* The following chunk of code inflates a custom dialog box to allow
+                 * people to text Onyx instead of using the default voice feature */
+
+                LayoutInflater inflater = LayoutInflater.from(MainActivity.this);
+                final View textOnyx = inflater.inflate(R.layout.text_input, null);
+                AlertDialog.Builder ab = new AlertDialog.Builder(MainActivity.this);
+                ab.setView(textOnyx);
+                ab.setCancelable(false);
+                ab.create();
+                final AlertDialog show = ab.show();
+                show.setCancelable(true);
+                textInputCancelButton = (Button) show.findViewById(R.id.textInputCancelButton);
+                textInputDoneButton = (Button) show.findViewById(R.id.textInputDoneButton);
+                textOnyxInput = (EditText) show.findViewById(R.id.textInput);
+                textOnyxInput.requestFocus();
+                textInputCancelButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        // Dismiss dialog box
+
+                        show.dismiss();
+
+                        /* The following code will enable immersive mode for the splash screen
+                         * for devices running on Android 3.0 Honeycomb or higher. This will effectively
+                         * enable immersive mode for all of the app's instances as the app is only compatible
+                         * with devices running on Android 6.0 Marshmallow or higher */
+
+                        if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.HONEYCOMB) {
+                            View decorView = getWindow().getDecorView();
+                            decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                                    | View.SYSTEM_UI_FLAG_FULLSCREEN
+                                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+                        }
+
+                    }
+                });
+                textInputDoneButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        if(!textOnyxInput.getText().toString().isEmpty())
+                        {
+
+                            // Dismiss the dialog box
+
+                            show.dismiss();
+
+                            /* The following code will enable immersive mode for the splash screen
+                             * for devices running on Android 3.0 Honeycomb or higher. This will effectively
+                             * enable immersive mode for all of the app's instances as the app is only compatible
+                             * with devices running on Android 6.0 Marshmallow or higher */
+
+                            if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.HONEYCOMB) {
+                                View decorView = getWindow().getDecorView();
+                                decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                                        | View.SYSTEM_UI_FLAG_FULLSCREEN
+                                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+                            }
+
+                            // Initialize api.ai to handle text requests
+
+                            final AIConfiguration textAIconfig = new AIConfiguration(getApplicationContext().getResources().getString(R.string.api_ai_client_access_token),
+                                    AIConfiguration.SupportedLanguages.English,
+                                    AIConfiguration.RecognitionEngine.System);
+                            final AIDataService textAIDataService = new AIDataService(getApplicationContext(), textAIconfig);
+                            final AIRequest textAIRequest = new AIRequest();
+                            textAIRequest.setQuery(textOnyxInput.getText().toString());
+
+                            // Handle request on a background thread
+
+                            new AsyncTask<AIRequest, Void, AIResponse>() {
+                                @Override
+                                protected AIResponse doInBackground(AIRequest... requests) {
+                                    final AIRequest request = requests[0];
+                                    try {
+                                        final AIResponse response = textAIDataService.request(textAIRequest);
+                                        return response;
+                                    } catch (AIServiceException e) {
+                                    }
+                                    return null;
+                                }
+                                @Override
+                                protected void onPostExecute(AIResponse result) {
+                                    if (result != null) {
+
+                                        // process aiResponse here
+
+                                        if(result.getStatus().getCode()!=200)
+                                        {
+
+                                            changeText("Something's not right. Try again in a little bit", ONYX_TV);
+                                            GlobalClass.logError("API.AI Error: " + result.getStatus().getCode() + ": " + result.getStatus().getErrorType(), getApplicationContext());
+
+                                        }
+
+                                        else
+                                        {
+
+                                            changeText(result.getResult().getResolvedQuery().toString(), USER_TV);
+                                            if(!result.getResult().getFulfillment().getSpeech().toString().isEmpty())
+                                            {
+
+                                                changeText(result.getResult().getFulfillment().getSpeech().toString(), ONYX_TV);
+                                                speak(result.getResult().getFulfillment().getSpeech().toString());
+
+                                            }
+
+                                            if(!result.getResult().getAction().toString().isEmpty())
+                                            {
+
+                                                switch (result.getResult().getAction().toString())
+                                                {
+
+                                                    case "errorLog.show": changeText("Opening the error log.", ONYX_TV);
+                                                        startActivity(new Intent(MainActivity.this, ErrorLogActivity.class));
+                                                        break;
+
+                                                    // Check if the customer has placed an order earlier
+
+                                                    case "order.getExistingSenderNumber": senderPhoneNumber = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "phone-number");
+                                                        if (Collections.binarySearch(userList, senderPhoneNumber) < 0) {
+
+                                                            resetAllApiAiContexts();
+
+                                                            // Notify user
+
+                                                            changeText("I'm sorry, but it seems as though you are not a registered user.", ONYX_TV);
+                                                            speak("I'm sorry, but it seems as though you are not a registered user.");
+
+                                                        } else {
+
+                                                            // Update Firebase dependants
+
+                                                            updateFirebaseDependants();
+
+                                                        }
+
+                                                        // Retrieve customer name
+
+                                                    case "order.getSenderName": senderFirstName = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "given-name");
+                                                        senderLastName = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "last-name");
+                                                        if(senderFirstName=="") sender = senderLastName;
+                                                        else if(senderLastName=="") sender = senderFirstName;
+                                                        else if(senderFirstName=="" && senderLastName=="") sender = "Friend";
+                                                        else sender = senderFirstName+ " " + senderLastName;
+                                                        break;
+
+                                                    // Retrieve customer phone number
+
+                                                    case "order.getSenderNumber": senderPhoneNumber = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "phone-number");
+                                                        break;
+
+                                                    // Retrieve origin street address
+
+                                                    case "order.getOriginStreet": originStreetAddress = result.getResult().getResolvedQuery().toString();
+                                                        break;
+
+                                                    // Retrieve origin city
+
+                                                    case "order.getOriginCity": originCity = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "geo-city");
+                                                        break;
+
+                                                    // Retrieve origin country
+
+                                                    case "order.getOriginCountry": originCountry = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "geo-country");
+                                                        break;
+
+                                                    // Retrieve origin zip code
+
+                                                    case "order.getOriginZip": originZipCode = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "number");
+                                                        break;
+
+                                                    // Retrieve package description
+
+                                                    case "order.getDescription": packageDescription = result.getResult().getResolvedQuery().toString();
+                                                        break;
+
+                                                    // Retrieve package weight
+
+                                                    case "order.getWeight": packageWeight = GlobalClass.extractFromJSONObject(GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "unit-weight"), "amount");
+                                                        packageWeightUnit = GlobalClass.extractFromJSONObject(GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "unit-weight"), "unit");
+                                                        break;
+
+                                                    // Retrieve recipient name
+
+                                                    case "order.getRecipientName": recipientFirstName = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "given-name");
+                                                        recipientLastName = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "last-name");
+                                                        if(recipientFirstName=="") recipient = recipientLastName;
+                                                        else if(recipientLastName=="") recipient = recipientFirstName;
+                                                        else if(recipientFirstName=="" && recipientLastName=="") recipient = "Friend";
+                                                        else recipient = recipientFirstName+ " " + recipientLastName;
+                                                        break;
+
+                                                    // Retrieve recipient phone number
+
+                                                    case "order.getRecipientNumber": recipientPhoneNumber = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "phone-number");
+                                                        break;
+
+                                                    // Retrieve destination street address
+
+                                                    case "order.getDestinationStreet": destinationStreetAddress = result.getResult().getResolvedQuery().toString();
+                                                        break;
+
+                                                    // Retrieve destination city
+
+                                                    case "order.getDestinationCity": destinationCity = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "geo-city");
+                                                        break;
+
+                                                    // Retrieve destination country
+
+                                                    case "order.getDestinationCountry": destinationCountry = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "geo-country");
+                                                        break;
+
+                                                    // Retrieve destination zip code
+
+                                                    case "order.getDestinationZip": destinationZipCode = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "number");
+
+                                                        // Decide the scope of the order
+
+                                                        if(Objects.equals(originCountry, destinationCountry)) ORDER_SCOPE = "Domestic";
+                                                        else ORDER_SCOPE = "International";
+
+                                                        // Check for service availability in destination city
+
+                                                        if(!GlobalClass.verifyCity(GlobalClass.getCityList(destinationCountry, getApplicationContext()), destinationCity)) DHL_SERVICE_AVAILABLE = false;
+                                                        else if(!GlobalClass.verifyCity(GlobalClass.getCityList(originCountry, getApplicationContext()), originCity)) DHL_SERVICE_AVAILABLE = false;
+                                                        else DHL_SERVICE_AVAILABLE = true;
+
+                                                        // Calculate package type
+
+                                                        packageType = GlobalClass.determinePackageType(packageWeight);
+
+                                                        // Calculate shipping price
+
+                                                        shippingPrice = GlobalClass.calculateShippingPrice(Double.parseDouble(packageWeight));
+
+                                                        // Update Firebase database variables
+
+                                                        senderAddress = originStreetAddress + " " + originCity + " " + originCountry + " " + originZipCode;
+                                                        recipientAddress = destinationStreetAddress + " " + destinationCity + " " + destinationCountry + " " + destinationZipCode;
+                                                        trackerId = GlobalClass.computeTrackerIdFromPhoneNumber(senderPhoneNumber, trackerIdIndex);
+
+                                                        // Branch on the basis of service availability
+
+                                                        if(DHL_SERVICE_AVAILABLE)
+                                                        {
+
+                                                            changeText("Okay " + sender + ", You have decided to send a package weighing "
+                                                                    + packageWeight + " " + packageWeightUnit + " to " + recipient + " residing at " + destinationStreetAddress
+                                                                    + " " + destinationCity + " " + destinationCountry + " - " + destinationZipCode
+                                                                    + ". This will cost you $ " + shippingPrice + ".\n\nIs this information correct?", ONYX_TV);
+                                                            speak("Okay " + sender + " You have decided to send a package weighing "
+                                                                    + packageWeight + " " + packageWeightUnit + " to " + recipient + " residing at " + destinationStreetAddress
+                                                                    + " " + destinationCity + " " + destinationCountry + " - " + destinationZipCode
+                                                                    + " This will cost you $ " + shippingPrice + ".");
+
+                                                            recipientAddress = destinationStreetAddress + " " + destinationCity + " " + destinationCountry + " " + destinationZipCode;
+                                                            senderAddress = originStreetAddress + " " + originCity + " " + originCountry + " " + originZipCode;
+
+                                                            // Verify order details
+
+                                                            listen.setVisibility(View.GONE);
+                                                            voice.setVisibility(View.GONE);
+                                                            buttonContainer.setVisibility(View.VISIBLE);
+                                                            positiveButton.setText("YES");
+                                                            negativeButton.setText("NO");
+
+                                                            // Update Firebase Database
+
+                                                            updateFirebaseDatabase();
+
+                                                            // Set actionCode value to identify button actions
+
+                                                            actionCode = 100;
+
+                                                        }
+                                                        else
+                                                        {
+
+                                                            changeText("Unfortunately, we are unable to process your order at " +
+                                                                    "this moment. It seems as though we do not serve the origin/" +
+                                                                    "destination address you mentioned earlier.", ONYX_TV);
+                                                            speak("Unfortunately, we are unable to process your order at " +
+                                                                    "this moment. It seems as though we do not serve the origin/" +
+                                                                    "destination address you mentioned earlier.");
+
+                                                        }
+                                                        break;
+
+                                                    case "status.getTrackerId": AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                                                        builder.setCancelable(false);
+                                                        LayoutInflater layoutInflater = getLayoutInflater();
+                                                        View view = layoutInflater.inflate(R.layout.text_input, null);
+                                                        builder.setView(view);
+                                                        final EditText trackerIdTextView = (EditText) view.findViewById(R.id.textInput);
+                                                        trackerIdTextView.setHint("Enter tracker ID here");
+                                                        Button trackerIdDoneButton = (Button) view.findViewById(R.id.textInputDoneButton);
+                                                        Button trackerIdCancelButton = (Button) view.findViewById(R.id.textInputCancelButton);
+                                                        final AlertDialog alertDialog = builder.create();
+                                                        trackerIdDoneButton.setOnClickListener(new View.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(View v) {
+
+                                                                if(!trackerIdTextView.getText().toString().isEmpty())
+                                                                {
+
+                                                                    trackerId = trackerIdTextView.getText().toString();
+                                                                    if(Collections.binarySearch(trackerIdList, trackerId)>=0)
+                                                                    {
+
+                                                                        senderPhoneNumber = GlobalClass.computePhoneNumberFromTrackerId(trackerId.substring(0, trackerId.length()-1));
+                                                                        updateFirebaseDependants();
+                                                                        resetAllApiAiContexts();
+                                                                        changeText(packageStatus, ONYX_TV);
+                                                                        speak(packageStatus);
+                                                                        alertDialog.dismiss();
+
+                                                                    }
+
+                                                                    else
+                                                                    {
+
+                                                                        Toast.makeText(getApplicationContext(), "Invalid Tracker ID", Toast.LENGTH_SHORT).show();
+
+                                                                    }
+
+                                                                }
+
+                                                                else
+                                                                {
+
+                                                                    Toast.makeText(getApplicationContext(), "Please enter a valid Tracker ID", Toast.LENGTH_SHORT).show();
+
+                                                                }
+
+                                                            }
+                                                        });
+                                                        trackerIdCancelButton.setOnClickListener(new View.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(View v) {
+
+                                                                resetAllApiAiContexts();
+
+                                                                // Notify user
+
+                                                                changeText("Okay, What would you like to do?", ONYX_TV);
+                                                                speak("Okay, What would you like to do?");
+                                                                alertDialog.dismiss();
+
+
+                                                            }
+                                                        });
+                                                        alertDialog.show();
+
+                                                    case "service.available.kl":
+                                                        serviceCity = GlobalClass.extractFromJSONObject(result.getResult().getParameters().toString(), "geo-city");
+
+                                                        // The following piece of code will determine the country Onyx is accessed from
+
+                                                        GlobalClass.onyxCountry = GlobalClass.determineCountryByCity(serviceCity, getApplicationContext());
+
+                                                        // The following piece of code ensures the country is loaded in advance
+
+                                                        new Handler().postDelayed(new Runnable() {
+                                                            @Override
+                                                            public void run() {
+                                                                if(GlobalClass.verifyCity(GlobalClass.getCityList(GlobalClass.onyxCountry, getApplicationContext()), serviceCity))
+                                                                {
+
+                                                                    changeText("The DHL service is available in " + serviceCity, ONYX_TV);
+                                                                    speak("The DHL service is available in " + serviceCity);
+
+                                                                }
+                                                                else
+                                                                {
+
+                                                                    changeText("Sorry, DHL does not serve " + serviceCity, ONYX_TV);
+                                                                    speak("Sorry, DHL does not serve " + serviceCity);
+
+                                                                }
+                                                            }
+                                                        }, 1000);
+                                                        break;
+
+                                                    default: GlobalClass.logError("Undefined Action: " + result.getResult().getAction().toString() + "\nQuery: " + result.getResult().getResolvedQuery().toString(), getApplicationContext());
+                                                        break;
+
+                                                }
+
+                                            }
+
+                                        }
+                                    }
+                                }
+                            }.execute(textAIRequest);
+
+                        }
+                        else
+                        {
+
+                            // Display Custom Toast
+
+                            SuperActivityToast.create(activity, new Style(), Style.TYPE_STANDARD)
+                                    .setText("You have to say something for Onyx to respond.")
+                                    .setDuration(Style.DURATION_SHORT)
+                                    .setFrame(Style.FRAME_STANDARD)
+                                    .setColor(PaletteUtils.getSolidColor(PaletteUtils.MATERIAL_DEEP_ORANGE))
+                                    .setAnimations(Style.ANIMATIONS_POP).show();
+
+                        }
+
+                    }
+                });
+
             }
         });
 

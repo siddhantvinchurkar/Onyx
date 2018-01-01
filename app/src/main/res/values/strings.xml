@@ -26,12 +26,15 @@
 
     <string name="shodan_api_key">2X7ymEt9qcTxGBXNhiix52mM1yRNN2kL</string>
 
+    <!-- <string name="admob_banner_ad_unit_id">ca-app-pub-5111839041604013/6183509484</string> -->
     <string name="admob_banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
 
     <string name="action_settings">Settings</string>
     <string name="title_activity_settings">Settings</string>
 
     <!-- Strings related to Settings -->
+
+    <string name="settings_title">Settings</string>
 
     <!-- Example General settings -->
     <string name="pref_header_general">General</string>

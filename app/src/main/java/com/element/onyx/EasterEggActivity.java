@@ -192,15 +192,6 @@ public class EasterEggActivity extends AppCompatActivity {
         // Schedule a runnable to display UI elements after a delay
         mHideHandler.removeCallbacks(mHidePart2Runnable);
         mHideHandler.postDelayed(mShowPart2Runnable, UI_ANIMATION_DELAY);
-
-        // Display Custom Toast
-
-        SuperActivityToast.create(this, new Style(), Style.TYPE_STANDARD)
-                .setText("Hello, human!")
-                .setDuration(Style.DURATION_SHORT)
-                .setFrame(Style.FRAME_STANDARD)
-                .setColor(PaletteUtils.getSolidColor(PaletteUtils.MATERIAL_PURPLE))
-                .setAnimations(Style.ANIMATIONS_POP).show();
     }
 
     /**
